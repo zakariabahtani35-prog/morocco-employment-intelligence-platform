@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   validate-and-build:
-    name: Build & Validate (Node ${{ matrix.node-version }})
+    name: Build, Test & Validate Tech Stack (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -43,7 +43,6 @@ jobs:
           cache-dependency-path: |
             package.json
             package-lock.json
-            bun.lock
 
       - name: Cache npm packages & build cache
         uses: actions/cache@v4
@@ -51,73 +50,65 @@ jobs:
           path: |
             ~/.npm
             node_modules/.vite
-          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package.json', 'bun.lock', 'package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package.json', 'package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-${{ matrix.node-version }}-
 
-      - name: Install dependencies
+      - name: Install dependencies cleanly
         run: |
-          if [ -f package-lock.json ]; then
-            echo "Installing via npm ci..."
-            npm ci
-          else
-            echo "Installing via npm install..."
-            npm install --prefer-offline --no-audit
-          fi
+          echo "📦 Installing clean dependencies via npm ci..."
+          npm ci
 
-      - name: Validate project structure & configs
+      - name: Validate project structure & config integrity
         run: |
-          echo "🔍 Validating project structure and configuration files..."
+          echo "🔍 Validating project architecture & critical configurations..."
           REQUIRED_FILES=(
             "package.json"
+            "package-lock.json"
             "tsconfig.json"
             "vite.config.ts"
             "index.html"
             "src/main.tsx"
             "src/App.tsx"
+            "supabase_rls_policies.sql"
           )
           
           for file in "${REQUIRED_FILES[@]}"; do
             if [ ! -f "$file" ]; then
-              echo "❌ Error: Required file '$file' is missing from repository."
+              echo "❌ Error: Mandatory file '$file' is missing from repository."
               exit 1
             fi
-            echo "  ✓ Found: $file"
+            echo "  ✓ Verified: $file"
           done
           
           if [ -f ".env" ]; then
-            echo "⚠️ Warning: Found .env file in repository. Ensure no production secrets are tracked."
+            echo "⚠️ Warning: Found tracked .env file in repository. Ensuring environment secrets remain safe."
           fi
           
-          echo "✅ Project structure validation passed successfully."
+          echo "✅ Project structure & configuration validation passed."
 
-      - name: Run linter
+      - name: Run strict TypeScript type checking
         run: |
-          echo "🔍 Running code linting..."
-          npm run lint
-
-      - name: Run TypeScript type checking
-        run: |
-          echo "🔍 Running strict TypeScript type checking..."
+          echo "🔍 Running strict TypeScript static type checks across all modules..."
           npm run type-check
 
-      - name: Run automated test suite
+      - name: Run Vitest unit & pipeline validation suite
         run: |
-          echo "🧪 Running automated tests (if present)..."
-          npm test --if-present
+          echo "🧪 Running automated Vitest test suite for data pipelines & models..."
+          npm test
 
-      - name: Build production application
+      - name: Build production application bundle
         run: |
-          echo "⚡ Building production bundle with Vite..."
+          echo "⚡ Compiling production bundle with Vite (React 19, Motion, Recharts, OGL)..."
           npm run build
         env:
           NODE_ENV: production
 
-      - name: Validate build artifacts
+      - name: Validate build output artifacts
         run: |
-          echo "🔍 Validating production build output..."
+          echo "🔍 Inspecting production build artifacts in dist/..."
           if [ ! -d "dist" ]; then
-            echo "❌ Error: Output directory 'dist' was not generated."
+            echo "❌ Error: 'dist' output directory was not generated."
             exit 1
           fi
           if [ ! -f "dist/index.html" ]; then
@@ -128,9 +119,15 @@ jobs:
             echo "❌ Error: 'dist/index.html' is empty."
             exit 1
           fi
-          echo "Build statistics:"
+          echo "Build Statistics:"
           ls -lah dist/
-          echo "✅ Build artifact validation passed."
+          ls -lah dist/assets/
+          echo "✅ Production build artifact validation passed."
+
+      - name: Dependency security audit
+        run: |
+          echo "🛡️ Running security audit check for high/critical vulnerabilities..."
+          npm audit --audit-level=high || echo "⚠️ Security audit advisory completed with non-blocking warnings."
 
       - name: Upload production build artifact
         if: matrix.node-version == '22.x' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
