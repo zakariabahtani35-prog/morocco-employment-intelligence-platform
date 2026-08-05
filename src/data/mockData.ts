@@ -99,7 +99,7 @@ export const EVENTS_DATA: EcosystemEvent[] = [
     title: 'Stage 3: AI Skill & Seniority Categorization',
     date: 'Batch Execution',
     time: 'Every 6 Hours',
-    location: 'Gemini 1.5 Flash AI Service',
+    location: 'Automated Intelligence Extraction Engine',
     badge: 'AI ANALYTICS',
     bgGradient: 'from-[#3B388E] to-[#0D0B2E]',
     linkText: 'EXPLORE PROMPT PIPELINE',
@@ -140,7 +140,7 @@ export const FAQ_DATA: FAQItem[] = [
   {
     id: 'faq-4',
     question: 'How does the platform handle AI-driven skill extraction?',
-    answer: 'Each cleaned job description is processed through an automated Gemini AI prompt pipeline that extracts tech skills (Python, React, SQL, etc.), categorizes seniority (Junior, Mid, Senior), and estimates average MAD salaries.',
+    answer: 'Each cleaned job description is processed through an automated NLP Intelligence Extraction pipeline that extracts tech skills (Python, React, SQL, etc.), categorizes seniority (Junior, Mid, Senior), and estimates average MAD salaries.',
     category: 'tech'
   },
   {
@@ -173,7 +173,7 @@ export const ANNOUNCEMENTS_DATA: Announcement[] = [
   {
     id: 'ann-3',
     category: 'AI ENHANCEMENT',
-    title: 'Gemini Skill Extraction Accuracy Upgraded to 98.6%',
+    title: 'Automated Skill Extraction Accuracy Upgraded to 98.6%',
     link: '#'
   },
   {

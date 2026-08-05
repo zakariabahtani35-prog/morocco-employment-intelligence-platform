@@ -1,6 +1,6 @@
 /**
  * Backend-for-Frontend (BFF) Proxy Interface
- * Completely isolates sensitive keys (Gemini API / Supabase Service Key) from client bundle.
+ * Completely isolates sensitive keys (Intelligence API / Supabase Service Key) from client bundle.
  */
 
 export interface BffProxyRequestOptions {

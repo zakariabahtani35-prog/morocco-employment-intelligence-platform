@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { extractSalaryNumber } from '../supabaseService';
 import { 
-  parseGeminiJsonResponse, 
+  parseIntelligenceJsonResponse, 
   validateJobRecord, 
   retryWithBackoff,
-  GeminiExtractionSchema
+  IntelligenceExtractionSchema
 } from '../pipelineValidator';
 
 describe('MEIP Salary Parser (extractSalaryNumber)', () => {
@@ -21,10 +21,10 @@ describe('MEIP Salary Parser (extractSalaryNumber)', () => {
   });
 });
 
-describe('Gemini Response Fallback JSON Parser (parseGeminiJsonResponse)', () => {
+describe('Intelligence Engine JSON Response Parser (parseIntelligenceJsonResponse)', () => {
   it('parses valid raw JSON cleanly', () => {
     const raw = '{"normalized_title": "React Engineer", "confidence_score": 0.98}';
-    const parsed = parseGeminiJsonResponse(raw);
+    const parsed = parseIntelligenceJsonResponse(raw);
     expect(parsed.normalized_title).toBe('React Engineer');
     expect(parsed.confidence_score).toBe(0.98);
   });
@@ -35,20 +35,20 @@ describe('Gemini Response Fallback JSON Parser (parseGeminiJsonResponse)', () =>
   "technical_skills": ["Python", "PostgreSQL", "Docker"]
 }
 \`\`\``;
-    const parsed = parseGeminiJsonResponse(raw);
+    const parsed = parseIntelligenceJsonResponse(raw);
     expect(parsed.technical_skills).toEqual(['Python', 'PostgreSQL', 'Docker']);
   });
 
   it('handles trailing commas gracefully without crashing', () => {
     const raw = '{"title": "Data Analyst", "skills": ["SQL", "PowerBI",],}';
-    const parsed = parseGeminiJsonResponse(raw);
+    const parsed = parseIntelligenceJsonResponse(raw);
     expect(parsed.title).toBe('Data Analyst');
   });
 
-  it('validates outputs with GeminiExtractionSchema Zod model', () => {
+  it('validates outputs with IntelligenceExtractionSchema Zod model', () => {
     const raw = '{"normalized_title": "AI Architect", "technical_skills": ["PyTorch", "CUDA"], "confidence_score": 0.99}';
-    const parsed = parseGeminiJsonResponse(raw);
-    const validated = GeminiExtractionSchema.parse(parsed);
+    const parsed = parseIntelligenceJsonResponse(raw);
+    const validated = IntelligenceExtractionSchema.parse(parsed);
     expect(validated.normalized_title).toBe('AI Architect');
     expect(validated.technical_skills).toContain('PyTorch');
   });

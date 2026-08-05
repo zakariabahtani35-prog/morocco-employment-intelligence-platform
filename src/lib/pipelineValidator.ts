@@ -22,9 +22,9 @@ export const JobRecordSchema = z.object({
 export type JobRecordInput = z.infer<typeof JobRecordSchema>;
 
 /**
- * Zod Schema for AI Skill Extraction output from Gemini API
+ * Zod Schema for Automated Intelligence Skill Extraction output
  */
-export const GeminiExtractionSchema = z.object({
+export const IntelligenceExtractionSchema = z.object({
   job_id: z.string().optional(),
   normalized_title: z.string().default('Software Engineer'),
   technical_skills: z.array(z.string()).default([]),
@@ -36,16 +36,16 @@ export const GeminiExtractionSchema = z.object({
   confidence_score: z.number().min(0).max(1).default(0.95),
 });
 
-export type GeminiExtractionOutput = z.infer<typeof GeminiExtractionSchema>;
+export type IntelligenceExtractionOutput = z.infer<typeof IntelligenceExtractionSchema>;
 
 /**
- * Safely parses and sanitizes raw JSON string returned by Gemini API.
+ * Safely parses and sanitizes raw JSON string returned by Intelligence Extraction Pipeline.
  * Handles fallback cases where responses contain Markdown code blocks (```json ... ```),
  * trailing commas, or invalid escape sequences.
  */
-export function parseGeminiJsonResponse(rawText: string): Record<string, any> {
+export function parseIntelligenceJsonResponse(rawText: string): Record<string, any> {
   if (!rawText || typeof rawText !== 'string') {
-    return { error: 'Empty or non-string Gemini response' };
+    return { error: 'Empty or non-string Intelligence Engine response' };
   }
 
   try {

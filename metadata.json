@@ -2,5 +2,5 @@
   "name": "MEIP - Morocco Employment Intelligence Platform",
   "description": "AI-Powered Employment Intelligence & Decision Support Platform for Morocco by Zakaria Bahtani (Final Data Analyst Project, Simplon Maghreb × CCFBS)",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
