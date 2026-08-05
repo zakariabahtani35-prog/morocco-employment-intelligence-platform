@@ -46,8 +46,8 @@ export const FooterCountdown: React.FC = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover scale-140 origin-center opacity-40 pointer-events-none transition-transform duration-700 brightness-105 contrast-110"
       />
-      {/* Professional Deep Crimson Gradient Overlay for optimal legibility and subtle video ambient motion */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#8C002F]/75 via-[#AD003A]/65 to-[#54001C]/85 pointer-events-none" />
+      {/* Professional Bright Crimson Gradient Overlay for optimal legibility without dark foggy bottom tint */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#E6004D]/80 via-[#D00043]/80 to-[#C00F2F]/85 pointer-events-none" />
 
       {/* Stepped Pixelated Top Border Edge */}
       <div className="relative z-10 w-full bg-[#F4F5F7] leading-none pointer-events-none select-none">
@@ -145,11 +145,11 @@ export const FooterCountdown: React.FC = () => {
           {/* Floating Circle Button at Bottom Right */}
           <button
             onClick={scrollToTop}
-            className="bg-black text-white hover:bg-zinc-900 w-10 sm:w-12 h-10 sm:h-12 rounded-full shadow-2xl transition-transform hover:scale-105 cursor-pointer flex items-center justify-center shrink-0 ml-2 mb-1 z-10 border border-white/20"
+            className="bg-white text-[#E6004D] hover:bg-slate-100 w-10 sm:w-12 h-10 sm:h-12 rounded-full shadow-2xl transition-transform hover:scale-105 cursor-pointer flex items-center justify-center shrink-0 ml-2 mb-1 z-10 border border-white/40"
             aria-label="Back to top"
             title="Back to top"
           >
-            <SolanaBarsLogo className="w-5 h-4" fillColor="#FFFFFF" />
+            <SolanaBarsLogo className="w-5 h-4" fillColor="#E6004D" />
           </button>
         </div>
       </div>

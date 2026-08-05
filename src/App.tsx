@@ -24,7 +24,7 @@ import { PageView } from './types';
 import { SupabaseProvider } from './lib/SupabaseContext';
 
 // Dynamic Lazy Imports for Heavy Route Components & Modals
-const ExecutiveDashboard = lazy(() => import('./components/ExecutiveDashboard').then(m => ({ default: m.ExecutiveDashboard })));
+const ExecutiveDashboard = lazy(() => import('./features/dashboard/components/ExecutiveDashboard').then(m => ({ default: m.ExecutiveDashboard })));
 const ApiSandboxPage = lazy(() => import('./components/ApiSandboxPage').then(m => ({ default: m.ApiSandboxPage })));
 const TravelPage = lazy(() => import('./components/TravelPage').then(m => ({ default: m.TravelPage })));
 const SponsorsPage = lazy(() => import('./components/SponsorsPage').then(m => ({ default: m.SponsorsPage })));

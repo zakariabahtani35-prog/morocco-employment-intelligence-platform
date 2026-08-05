@@ -1,0 +1,50 @@
+/* Dashboard Analytics Feature Isolated Styles & CSS Variables */
+
+:root {
+  --dashboard-brand-red: #E6004D;
+  --dashboard-brand-blue: #2563EB;
+  --dashboard-brand-emerald: #10B981;
+  --dashboard-bg-light: #F4F5F7;
+  --dashboard-card-light: #FFFFFF;
+  --dashboard-border-light: #E2E8F0;
+  --dashboard-text-light: #0F172A;
+  
+  --dashboard-bg-dark: #09090B;
+  --dashboard-card-dark: #18181B;
+  --dashboard-sidebar-dark: #121215;
+  --dashboard-border-dark: #27272A;
+  --dashboard-text-dark: #F4F4F5;
+}
+
+/* Custom Skeleton Pulse Animation */
+@keyframes dashboardPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.dashboard-skeleton {
+  animation: dashboardPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom Scrollbar for Dashboard Components */
+.dashboard-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dashboard-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 9999px;
+}
+
+.dashboard-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #E6004D;
+}

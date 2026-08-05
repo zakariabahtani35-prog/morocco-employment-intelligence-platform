@@ -5,4 +5,6 @@ coverage/
 .DS_Store
 *.log
 .env*
-!.env.example
+
+# Private Jury Defense Presentation Script
+ana.md
