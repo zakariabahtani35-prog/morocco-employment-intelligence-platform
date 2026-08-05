@@ -1,0 +1,141 @@
+name: Continuous Integration (CI)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+      - dev
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+      - dev
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-build:
+    name: Build & Validate (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            package.json
+            package-lock.json
+            bun.lock
+
+      - name: Cache npm packages & build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules/.vite
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package.json', 'bun.lock', 'package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "Installing via npm ci..."
+            npm ci
+          else
+            echo "Installing via npm install..."
+            npm install --prefer-offline --no-audit
+          fi
+
+      - name: Validate project structure & configs
+        run: |
+          echo "🔍 Validating project structure and configuration files..."
+          REQUIRED_FILES=(
+            "package.json"
+            "tsconfig.json"
+            "vite.config.ts"
+            "index.html"
+            "src/main.tsx"
+            "src/App.tsx"
+          )
+          
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Error: Required file '$file' is missing from repository."
+              exit 1
+            fi
+            echo "  ✓ Found: $file"
+          done
+          
+          if [ -f ".env" ]; then
+            echo "⚠️ Warning: Found .env file in repository. Ensure no production secrets are tracked."
+          fi
+          
+          echo "✅ Project structure validation passed successfully."
+
+      - name: Run linter
+        run: |
+          echo "🔍 Running code linting..."
+          npm run lint
+
+      - name: Run TypeScript type checking
+        run: |
+          echo "🔍 Running strict TypeScript type checking..."
+          npm run type-check
+
+      - name: Run automated test suite
+        run: |
+          echo "🧪 Running automated tests (if present)..."
+          npm test --if-present
+
+      - name: Build production application
+        run: |
+          echo "⚡ Building production bundle with Vite..."
+          npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Validate build artifacts
+        run: |
+          echo "🔍 Validating production build output..."
+          if [ ! -d "dist" ]; then
+            echo "❌ Error: Output directory 'dist' was not generated."
+            exit 1
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ Error: 'dist/index.html' is missing from build output."
+            exit 1
+          fi
+          if [ ! -s "dist/index.html" ]; then
+            echo "❌ Error: 'dist/index.html' is empty."
+            exit 1
+          fi
+          echo "Build statistics:"
+          ls -lah dist/
+          echo "✅ Build artifact validation passed."
+
+      - name: Upload production build artifact
+        if: matrix.node-version == '22.x' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build-dist
+          path: dist/
+          retention-days: 7
