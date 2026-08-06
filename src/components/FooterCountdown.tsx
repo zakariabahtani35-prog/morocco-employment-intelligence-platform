@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Youtube, Twitter, Linkedin, Github, ArrowUpRight, Mail } from 'lucide-react';
 import { SolanaBarsLogo } from './SolanaLogo';
+import { AutoPlayVideo } from './AutoPlayVideo';
 
 export const FooterCountdown: React.FC = () => {
   // Target date for project defense / final submission (13 days remaining)
@@ -38,12 +39,8 @@ export const FooterCountdown: React.FC = () => {
   return (
     <footer className="relative w-full bg-[#E6004D] text-white overflow-hidden selection:bg-black selection:text-white">
       {/* Photorealistic Background Loop Video with Watermark Cropping Scale Mask */}
-      <video
+      <AutoPlayVideo
         src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/public/anand/Photorealistic_k_footage_of_t.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
         className="absolute inset-0 w-full h-full object-cover scale-140 origin-center opacity-40 pointer-events-none transition-transform duration-700 brightness-105 contrast-110"
       />
       {/* Professional Bright Crimson Gradient Overlay for optimal legibility without dark foggy bottom tint */}

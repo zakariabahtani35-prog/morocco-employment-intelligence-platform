@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
+import { AutoPlayVideo } from './AutoPlayVideo';
 
 export const WhyBreakpointSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'collection' | 'warehouse' | 'analytics'>('collection');
@@ -47,12 +48,9 @@ export const WhyBreakpointSection: React.FC = () => {
                 clipPath: 'polygon(0% 0%, calc(100% - 56px) 0%, calc(100% - 56px) 18px, calc(100% - 36px) 18px, calc(100% - 36px) 36px, calc(100% - 18px) 36px, calc(100% - 18px) 56px, 100% 56px, 100% 100%, 0% 100%)'
               }}
             >
-              <video
-                src="https://rwmigymwxhsxhkhhgxcd.supabase.co/storage/v1/object/sign/documents/Animate_this_image.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9mOTgzZGZlNC05MTRiLTQ0MWQtYjMyOS0zMWZlZDQxODEwOGMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJkb2N1bWVudHMvQW5pbWF0ZV90aGlzX2ltYWdlLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODUzNDAxNDMsImV4cCI6MTgxNjg3NjE0M30.CjhXapueh8i2R8qk8dQC661oG0_kYcNrxc7Kyxe_izo"
-                autoPlay
-                loop
-                muted
-                playsInline
+              <AutoPlayVideo
+                key={activeTab}
+                src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/sign/anan/video-erasio%20(2).mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82OGY5YzJlNi0yYmI4LTQ2MjQtYjJjOC1lYTNkYmQyMDdiYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbmFuL3ZpZGVvLWVyYXNpbyAoMikubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NjAyMDE3NiwiZXhwIjoxODE3NTU2MTc2fQ.cW4OpNcKXTazCiMjokrlk0uQBjues0dm755z-9IkQbc"
                 className="w-full h-full object-cover pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />

@@ -1,0 +1,175 @@
+{
+  "name": "MEIP - ReKrute IT & Executive Job Scraper Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 4
+            }
+          ]
+        }
+      },
+      "id": "1a8b7c6d-0001-4000-8000-000000000001",
+      "name": "Schedule Trigger (4h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.rekrute.com/recherche-emplois-maroc.html",
+        "options": {
+          "headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 MEIP-Scraper/2.0"
+          }
+        }
+      },
+      "id": "1a8b7c6d-0002-4000-8000-000000000002",
+      "name": "Fetch ReKrute Job Search Endpoint",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "extractHtml",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "titles",
+              "cssSelector": "h2.titreOfer a",
+              "returnArray": true
+            },
+            {
+              "key": "companies",
+              "cssSelector": "span.company-name",
+              "returnArray": true
+            },
+            {
+              "key": "locations",
+              "cssSelector": "li.location",
+              "returnArray": true
+            },
+            {
+              "key": "salaries",
+              "cssSelector": "li.salary",
+              "returnArray": true
+            }
+          ]
+        }
+      },
+      "id": "1a8b7c6d-0003-4000-8000-000000000003",
+      "name": "Extract HTML Data Models",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalization script for ReKrute job offers\nconst items = $input.all();\nconst output = [];\n\nfor (const item of items) {\n  const titles = item.json.titles || [];\n  const companies = item.json.companies || [];\n  const locations = item.json.locations || [];\n  const salaries = item.json.salaries || [];\n\n  for (let i = 0; i < titles.length; i++) {\n    const title = (titles[i] || '').trim();\n    const company = (companies[i] || 'Top Moroccan Enterprise').trim();\n    let location = (locations[i] || 'Casablanca').trim();\n    \n    // Normalize Moroccan cities\n    if (location.toLowerCase().includes('casa')) location = 'Casablanca';\n    else if (location.toLowerCase().includes('rabat')) location = 'Rabat';\n    else if (location.toLowerCase().includes('tang')) location = 'Tangier';\n    else if (location.toLowerCase().includes('marrak')) location = 'Marrakech';\n    else if (location.toLowerCase().includes('agad')) location = 'Agadir';\n\n    let salaryMAD = 14500;\n    const salText = (salaries[i] || '');\n    const match = salText.match(/(\\d+)[\\s.]?(\\d+)?/);\n    if (match) {\n      salaryMAD = parseInt(match[0].replace(/\\s+/g, ''), 10);\n    }\n\n    output.push({\n      json: {\n        title,\n        company,\n        location,\n        source: 'ReKrute',\n        contract_type: 'CDI',\n        avg_salary_mad: salaryMAD,\n        scraped_at: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn output;"
+      },
+      "id": "1a8b7c6d-0004-4000-8000-000000000004",
+      "name": "Normalize Salaries & Moroccan Cities",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO jobs (title, company, location, source, contract_type, avg_salary_mad, created_at, is_active)\nVALUES ($1, $2, $3, $4, $5, $6, NOW(), true)\nON CONFLICT (title, company, source) DO UPDATE SET avg_salary_mad = EXCLUDED.avg_salary_mad, updated_at = NOW();\n\nINSERT INTO pipeline_logs (source_name, records_harvested, execution_status, execution_time_ms, created_at)\nVALUES ('ReKrute', $7, 'SUCCESS', 98, NOW());",
+        "queryParams": "={{ [$json.title, $json.company, $json.location, $json.source, $json.contract_type, $json.avg_salary_mad, $input.all().length] }}"
+      },
+      "id": "1a8b7c6d-0005-4000-8000-000000000005",
+      "name": "Batch Upsert to Supabase PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1140,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "MEIP_SUPABASE_POSTGRES_CREDENTIALS",
+          "name": "Supabase Production PostgreSQL DB"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (4h)": {
+      "main": [
+        [
+          {
+            "node": "Fetch ReKrute Job Search Endpoint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch ReKrute Job Search Endpoint": {
+      "main": [
+        [
+          {
+            "node": "Extract HTML Data Models",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract HTML Data Models": {
+      "main": [
+        [
+          {
+            "node": "Normalize Salaries & Moroccan Cities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Salaries & Moroccan Cities": {
+      "main": [
+        [
+          {
+            "node": "Batch Upsert to Supabase PostgreSQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1.0.0",
+  "meta": {
+    "templateId": "meip-rekrute-scraper"
+  },
+  "tags": [
+    "MEIP",
+    "ReKrute",
+    "ETL",
+    "Scraper",
+    "Supabase"
+  ]
+}

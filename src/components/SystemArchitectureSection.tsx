@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AutoPlayVideo } from './AutoPlayVideo';
 import { 
   Database, 
   Globe, 
@@ -265,12 +266,8 @@ export const SystemArchitectureSection: React.FC = () => {
         {/* Selected Stage Detail Card */}
         <div className="relative bg-white border border-[#E2E8F0] rounded-2xl p-6 sm:p-10 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-8 items-center overflow-hidden">
           {/* Background Video */}
-          <video
+          <AutoPlayVideo
             src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/public/anand/Hyper_realistic_video_of_the_m.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
             className="absolute inset-0 w-full h-full object-cover scale-125 origin-center opacity-35 pointer-events-none transition-transform duration-700"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-white/60 pointer-events-none" />
@@ -394,12 +391,8 @@ export const SystemArchitectureSection: React.FC = () => {
 
             {/* Video Canvas Container - Crops watermarks via overflow-hidden and scale */}
             <div className="relative aspect-video w-full bg-black overflow-hidden flex items-center justify-center">
-              <video
+              <AutoPlayVideo
                 src={videoUrl}
-                autoPlay={isPlaying}
-                loop
-                muted={isMuted}
-                playsInline
                 className="w-full h-full object-cover scale-125 origin-center transition-all duration-300"
               />
 

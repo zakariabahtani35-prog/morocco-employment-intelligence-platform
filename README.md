@@ -8,6 +8,17 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Security Compliance](https://img.shields.io/badge/Security-RLS_Enforced-00E676?style=for-the-badge&logo=shield&logoColor=white)](#-security-boundary--environment-isolation)
 [![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-Automated_GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](#-continuous-integration--deployment-cicd)
+[![n8n ETL Automation](https://img.shields.io/badge/n8n-Automated_Scrapers-FF6D5A?style=for-the-badge&logo=n8n&logoColor=white)](./n8n-workflows/)
+
+<div align="center">
+  <br />
+  <h3>📹 Morocco Employment Intelligence Platform (MEIP) - Live System Demo</h3>
+  <video src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/sign/anan/video-erasio.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82OGY5YzJlNi0yYmI4LTQ2MjQtYjJjOC1lYTNkYmQyMDdiYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbmFuL3ZpZGVvLWVyYXNpby5tcDQiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg2MDIzMDc5LCJleHAiOjE4MTc1NTkwNzl9.aWJ4RlyVLTZxyfUTBMuHQZaF1iu80atMwC25q-4h_HI" width="100%" controls style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+    Your browser does not support HTML5 video. Click <a href="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/sign/anan/video-erasio.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82OGY5YzJlNi0yYmI4LTQ2MjQtYjJjOC1lYTNkYmQyMDdiYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbmFuL3ZpZGVvLWVyYXNpby5tcDQiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg2MDIzMDc5LCJleHAiOjE4MTc1NTkwNzl9.aWJ4RlyVLTZxyfUTBMuHQZaF1iu80atMwC25q-4h_HI">here to view the showcase video</a>.
+  </video>
+  <p><em>Real-Time Executive Dashboard & Automated Pipeline Telemetry Showcase</em></p>
+  <br />
+</div>
 
 > An enterprise-grade, automated data-ingestion, NLP skill extraction, and real-time analytical intelligence platform capturing, structuring, and visualizing national labor market dynamics across all 12 regions of the Kingdom of Morocco.
 
@@ -17,7 +28,7 @@
 
 The **Morocco Employment Intelligence Platform (MEIP)** eliminates structural information asymmetry in the North African talent ecosystem. By orchestrating multi-portal web harvesters across leading recruitment sources (**ANAPEC, ReKrute, Emploi.ma, DreamJob, Novojob**), MEIP continuously captures raw recruitment volume.
 
-Powered by an **Automated NLP Engine** and **n8n workflow orchestration**, unstructured job descriptions are dynamically normalized, sanitized, and indexed into an OLAP Star Schema **Supabase PostgreSQL Data Warehouse**. The executive analytics layer delivers real-time salary distributions, ICT skill demand matrices, regional employment density heatmaps, and enterprise hiring benchmarks with sub-second response times.
+Powered by an **Automated NLP Engine** and **n8n workflow orchestration** (see [`n8n-workflows/`](./n8n-workflows/)), unstructured job descriptions are dynamically normalized, sanitized, and indexed into an OLAP Star Schema **Supabase PostgreSQL Data Warehouse**. The executive analytics layer delivers real-time salary distributions, ICT skill demand matrices, regional employment density heatmaps, and enterprise hiring benchmarks with sub-second response times.
 
 ```
        +-------------------------------------------------------------------------+

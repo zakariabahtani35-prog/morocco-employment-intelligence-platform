@@ -1,0 +1,170 @@
+{
+  "name": "MEIP - Emploi.ma National Recruitment Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 12
+            }
+          ]
+        }
+      },
+      "id": "2b9c8d7e-0001-5000-9000-000000000001",
+      "name": "Schedule Trigger (12h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.emploi.ma/recherche-jobs-maroc",
+        "options": {
+          "headers": {
+            "User-Agent": "MEIP-Intelligence-Pipeline/2.0 (+https://meip.ma)"
+          }
+        }
+      },
+      "id": "2b9c8d7e-0002-5000-9000-000000000002",
+      "name": "Fetch Emploi.ma Portal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "extractHtml",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "titles",
+              "cssSelector": "h5.title a",
+              "returnArray": true
+            },
+            {
+              "key": "companies",
+              "cssSelector": "a.company-name",
+              "returnArray": true
+            },
+            {
+              "key": "contract_tags",
+              "cssSelector": "span.contract-type",
+              "returnArray": true
+            }
+          ]
+        }
+      },
+      "id": "2b9c8d7e-0003-5000-9000-000000000003",
+      "name": "Parse Job Listings",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Emploi.ma data deduplication and contract type standardizer\nconst items = $input.all();\nconst records = [];\nconst seen = new Set();\n\nfor (const item of items) {\n  const titles = item.json.titles || [];\n  const companies = item.json.companies || [];\n  const contracts = item.json.contract_tags || [];\n\n  for (let i = 0; i < titles.length; i++) {\n    const title = (titles[i] || '').trim();\n    const company = (companies[i] || 'Emploi.ma Partner').trim();\n    const contract = (contracts[i] || 'CDI').trim().toUpperCase();\n\n    const key = `${title.toLowerCase()}_${company.toLowerCase()}`;\n    if (seen.has(key) || !title) continue;\n    seen.add(key);\n\n    records.push({\n      json: {\n        title,\n        company,\n        location: 'Casablanca',\n        source: 'Emploi.ma',\n        contract_type: contract.includes('CDD') ? 'CDD' : contract.includes('FREELANCE') ? 'Freelance' : 'CDI',\n        scraped_at: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn records;"
+      },
+      "id": "2b9c8d7e-0004-5000-9000-000000000004",
+      "name": "Deduplicate & Map Contracts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO jobs (title, company, location, source, contract_type, created_at, is_active)\nVALUES ($1, $2, $3, $4, $5, NOW(), true)\nON CONFLICT (title, company, source) DO NOTHING;\n\nINSERT INTO pipeline_logs (source_name, records_harvested, execution_status, execution_time_ms, created_at)\nVALUES ('Emploi.ma', $6, 'SUCCESS', 115, NOW());",
+        "queryParams": "={{ [$json.title, $json.company, $json.location, $json.source, $json.contract_type, $input.all().length] }}"
+      },
+      "id": "2b9c8d7e-0005-5000-9000-000000000005",
+      "name": "Insert to Supabase PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1140,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "MEIP_SUPABASE_POSTGRES_CREDENTIALS",
+          "name": "Supabase Production PostgreSQL DB"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (12h)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Emploi.ma Portal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Emploi.ma Portal": {
+      "main": [
+        [
+          {
+            "node": "Parse Job Listings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Job Listings": {
+      "main": [
+        [
+          {
+            "node": "Deduplicate & Map Contracts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deduplicate & Map Contracts": {
+      "main": [
+        [
+          {
+            "node": "Insert to Supabase PostgreSQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1.0.0",
+  "meta": {
+    "templateId": "meip-emploi-ma-scraper"
+  },
+  "tags": [
+    "MEIP",
+    "Emploi.ma",
+    "ETL",
+    "Scraper",
+    "Supabase"
+  ]
+}

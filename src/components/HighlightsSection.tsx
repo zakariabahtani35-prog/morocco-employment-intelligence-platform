@@ -1,5 +1,6 @@
 import React from 'react';
 import { Play, LayoutDashboard, BarChart2 } from 'lucide-react';
+import { AutoPlayVideo } from './AutoPlayVideo';
 
 interface HighlightsSectionProps {
   onOpenRecapModal: () => void;
@@ -11,12 +12,8 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({ onOpenReca
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="relative rounded-2xl border border-[#E2E8F0] bg-white p-8 sm:p-16 min-h-[380px] sm:min-h-[460px] flex flex-col justify-between overflow-hidden group shadow-md">
           {/* Background Video with MEIP Interactive Web Dashboard Visuals */}
-          <video
+          <AutoPlayVideo
             src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/public/vi/orid_mitl_had_sora_bikol_tfasi.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
             className="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-white/40 pointer-events-none" />
