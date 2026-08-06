@@ -6,6 +6,7 @@ export const SponsorsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<'all' | 'platinum' | 'gold' | 'silver'>('all');
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const filteredSponsors = SPONSORS_DATA.filter((s) => {
     const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) || s.logoText.toLowerCase().includes(searchTerm.toLowerCase());
@@ -104,21 +105,29 @@ export const SponsorsPage: React.FC = () => {
 
       {/* Sponsor Contact Drawer / Modal */}
       {isContactOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white border border-[#E2E8F0] rounded-2xl max-w-lg w-full p-8 text-[#1A202C] space-y-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setIsContactOpen(false)}>
+          <div role="dialog" aria-modal="true" aria-label="Partner Inquiry Form" className="bg-white border border-[#E2E8F0] rounded-2xl max-w-lg w-full p-8 text-[#1A202C] space-y-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <h3 className="font-space font-bold text-2xl text-[#3B388E]">Partner With MEIP</h3>
             <p className="font-sans-body text-gray-600 text-sm">
               Partnership opportunities include custom dashboard integration, regional labor market research, and academic dataset sharing.
             </p>
-            <form onSubmit={(e) => { e.preventDefault(); alert('Inquiry sent to Zakaria Bahtani!'); setIsContactOpen(false); }} className="space-y-4 font-sans-body text-xs">
-              <input required type="text" placeholder="Organization / Institution Name" className="w-full bg-[#F4F5F7] border border-[#E2E8F0] rounded-xl p-3 text-[#1A202C] focus:outline-none focus:border-[#E6004D]" />
-              <input required type="email" placeholder="Work Email Address" className="w-full bg-[#F4F5F7] border border-[#E2E8F0] rounded-xl p-3 text-[#1A202C] focus:outline-none focus:border-[#E6004D]" />
-              <textarea placeholder="Tell us about your organization & goals..." rows={3} className="w-full bg-[#F4F5F7] border border-[#E2E8F0] rounded-xl p-3 text-[#1A202C] focus:outline-none focus:border-[#E6004D]" />
-              <div className="flex gap-3">
-                <button type="submit" className="bg-[#E6004D] text-white font-bold uppercase py-2.5 px-6 rounded-xl cursor-pointer">Submit Inquiry</button>
-                <button type="button" onClick={() => setIsContactOpen(false)} className="bg-[#F4F5F7] border border-[#E2E8F0] text-gray-600 py-2.5 px-4 rounded-xl cursor-pointer">Cancel</button>
+
+            {isSubmitted ? (
+              <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl font-sans-body text-xs font-bold space-y-2">
+                <div>✓ Thank you! Your partnership inquiry was submitted successfully.</div>
+                <button type="button" onClick={() => { setIsSubmitted(false); setIsContactOpen(false); }} className="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-xs">Close Window</button>
               </div>
-            </form>
+            ) : (
+              <form onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }} className="space-y-4 font-sans-body text-xs">
+                <input required type="text" placeholder="Organization / Institution Name" className="w-full bg-[#F4F5F7] border border-[#E2E8F0] rounded-xl p-3 text-[#1A202C] focus:outline-none focus:border-[#E6004D]" />
+                <input required type="email" placeholder="Work Email Address" className="w-full bg-[#F4F5F7] border border-[#E2E8F0] rounded-xl p-3 text-[#1A202C] focus:outline-none focus:border-[#E6004D]" />
+                <textarea placeholder="Tell us about your organization & goals..." rows={3} className="w-full bg-[#F4F5F7] border border-[#E2E8F0] rounded-xl p-3 text-[#1A202C] focus:outline-none focus:border-[#E6004D]" />
+                <div className="flex gap-3">
+                  <button type="submit" className="bg-[#E6004D] text-white font-bold uppercase py-2.5 px-6 rounded-xl cursor-pointer hover:bg-[#C00F2F] transition-colors">Submit Inquiry</button>
+                  <button type="button" onClick={() => setIsContactOpen(false)} className="bg-[#F4F5F7] border border-[#E2E8F0] text-gray-600 py-2.5 px-4 rounded-xl cursor-pointer hover:bg-gray-200 transition-colors">Cancel</button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

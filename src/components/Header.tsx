@@ -114,8 +114,20 @@ export const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          {/* Action Area: Dashboard + Menu Toggle */}
+          {/* Action Area: Search + Dashboard + Menu Toggle */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* SEARCH / COMMAND PALETTE BUTTON */}
+            {onOpenCommandPalette && (
+              <button
+                onClick={onOpenCommandPalette}
+                className="bg-[#F4F5F7] hover:bg-gray-200 border border-[#E2E8F0] px-2.5 py-1.5 text-gray-600 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 text-xs font-mono-code shrink-0"
+                title="Open Command Hub (Ctrl+K)"
+                aria-label="Open Command Hub"
+              >
+                <Command className="w-3.5 h-3.5 text-[#3B388E]" />
+                <span className="hidden sm:inline font-bold text-[#3B388E]">K</span>
+              </button>
+            )}
 
             {/* LAUNCH DASHBOARD Button */}
             <button

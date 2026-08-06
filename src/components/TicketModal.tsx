@@ -14,6 +14,14 @@ export const TicketModal: React.FC<TicketModalProps> = ({
   initialTicketId = 'general',
 }) => {
   const [selectedTicketId, setSelectedTicketId] = useState(initialTicketId);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setSelectedTicketId(initialTicketId);
+      setIsPurchased(false);
+    }
+  }, [isOpen, initialTicketId]);
+
   const [promoCode, setPromoCode] = useState('SIMPLON20');
   const [appliedDiscount, setAppliedDiscount] = useState(0.2); // 20% by default
   const [discountMsg, setDiscountMsg] = useState('20% academic access discount via SIMPLON20');

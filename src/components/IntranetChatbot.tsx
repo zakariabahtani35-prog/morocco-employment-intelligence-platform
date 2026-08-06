@@ -64,6 +64,27 @@ const KNOWLEDGE_BASE = {
 - **Data Validation Quality:** 98.6% Hygiene & Deduplication Rate`
 };
 
+function renderFormattedText(text: string) {
+  const lines = text.split('\n');
+  return lines.map((line, lineIdx) => {
+    // Parse bold syntax **text**
+    const parts = line.split(/(\*\*.*?\*\*)/g);
+    const formattedLine = parts.map((part, partIdx) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={partIdx} className="font-bold text-[#0F172A]">{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
+
+    return (
+      <React.Fragment key={lineIdx}>
+        {lineIdx > 0 && <br />}
+        {formattedLine}
+      </React.Fragment>
+    );
+  });
+}
+
 export const IntranetChatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -221,7 +242,12 @@ export const IntranetChatbot: React.FC = () => {
           {isOpen ? (
             <X className="w-5 h-5 text-slate-800 transition-transform duration-200 rotate-90 group-hover:rotate-0" />
           ) : (
-            <Bot className="w-5.5 h-5.5 text-[#0F172A] hover:text-slate-700 transition-colors" />
+            <>
+              <Bot className="w-5.5 h-5.5 text-[#0F172A] hover:text-slate-700 transition-colors" />
+              {unreadBadge && (
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#E6004D] border-2 border-white rounded-full animate-bounce" />
+              )}
+            </>
           )}
         </motion.button>
       </div>
@@ -362,8 +388,8 @@ export const IntranetChatbot: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="whitespace-pre-wrap font-sans-body">
-                      {msg.text}
+                    <div className="whitespace-pre-wrap font-sans-body leading-relaxed">
+                      {renderFormattedText(msg.text)}
                     </div>
 
                     <div
