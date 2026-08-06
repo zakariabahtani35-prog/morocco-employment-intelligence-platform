@@ -268,9 +268,9 @@ export const SystemArchitectureSection: React.FC = () => {
           {/* Background Video */}
           <AutoPlayVideo
             src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/public/anand/Hyper_realistic_video_of_the_m.mp4"
-            className="absolute inset-0 w-full h-full object-cover scale-125 origin-center opacity-35 pointer-events-none transition-transform duration-700"
+            className="absolute inset-0 w-full h-full object-cover scale-125 origin-center opacity-80 pointer-events-none transition-transform duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-white/60 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent pointer-events-none" />
 
           <div className="lg:col-span-7 space-y-5 relative z-10">
             <div className="flex items-center gap-3">

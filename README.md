@@ -12,8 +12,8 @@
 
 <div align="center">
   <br />
-  <h3>📹 Morocco Employment Intelligence Platform (MEIP) - Live System Demo</h3>
-  <video src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/sign/anan/video-erasio.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82OGY5YzJlNi0yYmI4LTQ2MjQtYjJjOC1lYTNkYmQyMDdiYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbmFuL3ZpZGVvLWVyYXNpby5tcDQiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg2MDIzMDc5LCJleHAiOjE4MTc1NTkwNzl9.aWJ4RlyVLTZxyfUTBMuHQZaF1iu80atMwC25q-4h_HI" width="100%" controls style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+  <h3 style="color: #3B388E;">📹 Morocco Employment Intelligence Platform (MEIP) - Live System Demo</h3>
+  <video src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/sign/anan/video-erasio.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82OGY5YzJlNi0yYmI4LTQ2MjQtYjJjOC1lYTNkYmQyMDdiYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbmFuL3ZpZGVvLWVyYXNpby5tcDQiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg2MDIzMDc5LCJleHAiOjE4MTc1NTkwNzl9.aWJ4RlyVLTZxyfUTBMuHQZaF1iu80atMwC25q-4h_HI" width="100%" controls style="border-radius: 12px; border: 2px solid #E2E8F0; box-shadow: 0 12px 36px rgba(59, 56, 142, 0.15);">
     Your browser does not support HTML5 video. Click <a href="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/sign/anan/video-erasio.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82OGY5YzJlNi0yYmI4LTQ2MjQtYjJjOC1lYTNkYmQyMDdiYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbmFuL3ZpZGVvLWVyYXNpby5tcDQiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg2MDIzMDc5LCJleHAiOjE4MTc1NTkwNzl9.aWJ4RlyVLTZxyfUTBMuHQZaF1iu80atMwC25q-4h_HI">here to view the showcase video</a>.
   </video>
   <p><em>Real-Time Executive Dashboard & Automated Pipeline Telemetry Showcase</em></p>
@@ -47,6 +47,46 @@ Powered by an **Automated NLP Engine** and **n8n workflow orchestration** (see [
 
 ---
 
+## 📸 Interactive System UI & Feature Visual Gallery
+
+Explore the primary production modules, interface components, and live telemetry screens of the platform:
+
+<div align="center">
+  <br />
+
+  <!-- 1. Full Platform Preview Showcase -->
+  <h4 align="left" style="color: #3B388E;">1. 📜 Complete End-to-End Platform Architecture & Interface (Full Preview)</h4>
+  <img src="./docs/screenshots/full-platform-preview.png" alt="MEIP Full Platform Interface Preview" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
+  <p align="left"><em>Figure 1: Complete end-to-end platform page architecture capturing all interactive components, scrapers, data warehouse, and analytics sections.</em></p>
+  <br />
+  
+  <!-- 2. Hero Landing Showcase -->
+  <h4 align="left" style="color: #3B388E;">2. 🌐 National Employment Intelligence Hero & Landing Module</h4>
+  <img src="./docs/screenshots/hero-section.png" alt="MEIP Hero Landing Module" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
+  <p align="left"><em>Figure 2: High-impact hero landing module highlighting automated extraction across ANAPEC, ReKrute, Emploi.ma, DreamJob, and Novojob.</em></p>
+  <br />
+
+  <!-- 3. Architecture & Pipeline Showcase -->
+  <h4 align="left" style="color: #3B388E;">3. ⚙️ Core Architecture & Interactive Feature Pipeline</h4>
+  <img src="./docs/screenshots/architecture-features.png" alt="MEIP Core Architecture & Features" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
+  <p align="left"><em>Figure 3: Interactive 3-tier pipeline explorer detailing automatic multi-source collection, Supabase PostgreSQL Star Schema OLAP, and AI decision support.</em></p>
+  <br />
+
+  <!-- 4. Dashboard Preview Showcase -->
+  <h4 align="left" style="color: #3B388E;">4. 📊 Live Market Intelligence & Decision Support Dashboard</h4>
+  <img src="./docs/screenshots/dashboard-preview.png" alt="MEIP Live Market Intelligence Dashboard" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
+  <p align="left"><em>Figure 4: Power BI decision support preview for exploring live recruitment KPIs, regional job density maps, requested technologies, and salary benchmarks.</em></p>
+  <br />
+
+  <!-- 5. FAQ & Footer Showcase -->
+  <h4 align="left" style="color: #3B388E;">5. ❓ Technical FAQ Accordion & Live Countdown Telemetry</h4>
+  <img src="./docs/screenshots/faq-footer.png" alt="MEIP FAQ Accordion & Live Footer" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
+  <p align="left"><em>Figure 5: Comprehensive technical FAQ accordion and live defense countdown timer with direct author contact integration.</em></p>
+  <br />
+</div>
+
+---
+
 ## 🏗️ Visual System Architecture & Flow Diagrams
 
 ### 1. End-to-End Automated ELT Data Pipeline Architecture
@@ -70,6 +110,7 @@ flowchart TD
         C1["Intelligence Extraction Service"]
         C2["Zod Schema Validation Guard"]
         C3["Skill & Seniority Taxonomy Categorization"]
+        C4["AI Salary & Compensation Agent (LangChain + Gemini)"]
     end
 
     subgraph Warehouse["🗄️ Supabase PostgreSQL Data Warehouse (OLAP)"]
@@ -88,8 +129,8 @@ flowchart TD
     Sourcing --> Orchestration
     B3 --> D1
     D1 --> Intelligence
-    C1 --> C2 --> C3
-    C3 --> D2
+    C1 --> C2 --> C3 & C4
+    C3 & C4 --> D2
     C3 --> D3
     B3 --> D4
     D2 & D3 & D4 --> Presentation

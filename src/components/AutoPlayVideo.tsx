@@ -11,34 +11,40 @@ export const AutoPlayVideo: React.FC<AutoPlayVideoProps> = ({ src, className, ..
     const video = videoRef.current;
     if (!video) return;
 
-    // Set muted DOM properties explicitly for React hydration & autoplay policy compliance
     video.defaultMuted = true;
     video.muted = true;
     video.playsInline = true;
 
-    const attemptPlay = () => {
-      if (video.paused) {
-        video.play().catch((err) => {
-          console.warn('Autoplay prevented by browser policy:', err);
-        });
+    const playVideo = () => {
+      if (video) {
+        video.muted = true;
+        const promise = video.play();
+        if (promise !== undefined) {
+          promise.catch((err) => {
+            console.warn('Autoplay prevented by browser policy:', err);
+          });
+        }
       }
     };
 
-    attemptPlay();
+    // Force reloading the media element when src changes
+    video.load();
+    playVideo();
 
-    video.addEventListener('loadeddata', attemptPlay);
-    video.addEventListener('canplay', attemptPlay);
+    video.addEventListener('loadedmetadata', playVideo);
+    video.addEventListener('loadeddata', playVideo);
+    video.addEventListener('canplay', playVideo);
 
     return () => {
-      video.removeEventListener('loadeddata', attemptPlay);
-      video.removeEventListener('canplay', attemptPlay);
+      video.removeEventListener('loadedmetadata', playVideo);
+      video.removeEventListener('loadeddata', playVideo);
+      video.removeEventListener('canplay', playVideo);
     };
   }, [src]);
 
   return (
     <video
       ref={videoRef}
-      src={src}
       autoPlay
       loop
       muted
@@ -46,6 +52,9 @@ export const AutoPlayVideo: React.FC<AutoPlayVideoProps> = ({ src, className, ..
       preload="auto"
       className={className}
       {...props}
-    />
+    >
+      <source src={src} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
   );
 };

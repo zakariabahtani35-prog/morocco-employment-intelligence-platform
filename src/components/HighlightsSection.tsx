@@ -14,9 +14,9 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({ onOpenReca
           {/* Background Video with MEIP Interactive Web Dashboard Visuals */}
           <AutoPlayVideo
             src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/public/vi/orid_mitl_had_sora_bikol_tfasi.mp4"
-            className="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
+            className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-white/40 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-transparent pointer-events-none" />
 
           {/* Large Overlay Watermark Logo */}
           <div className="absolute right-4 bottom-4 font-space font-extrabold text-6xl sm:text-9xl text-[#3B388E]/5 pointer-events-none tracking-widest select-none uppercase">
