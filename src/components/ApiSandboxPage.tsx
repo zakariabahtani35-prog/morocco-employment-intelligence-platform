@@ -84,14 +84,14 @@ const ENDPOINTS: ApiEndpoint[] = [
         },
         {
           job_id: "JOB-MA-2026-9810",
-          title: "Business Intelligence Analyst (PowerBI / SQL)",
+          title: "Business Intelligence Analyst (SQL / Analytics)",
           company: "BMCE Bank / OMAEP",
           location: "Rabat Agdal",
           portal: "ANAPEC",
           date_posted: "2026-08-01",
           salary_range_mad: "15,000 - 20,000 MAD / month",
           contract_type: "CDI",
-          top_skills: ["PowerBI", "SQL", "Star Schema", "Financial Modeling"]
+          top_skills: ["SQL", "Star Schema", "Financial Modeling", "Data Viz"]
         }
       ]
     }
@@ -116,7 +116,7 @@ const ENDPOINTS: ApiEndpoint[] = [
         { rank: 2, skill: "PostgreSQL / SQL", mentions: 7890, demand_velocity: "+22.1% YoY", category: "Database OLAP" },
         { rank: 3, skill: "React.js / TypeScript", mentions: 6540, demand_velocity: "+15.8% YoY", category: "Frontend Frameworks" },
         { rank: 4, skill: "Docker & Kubernetes", mentions: 5210, demand_velocity: "+31.2% YoY", category: "DevOps / Infrastructure" },
-        { rank: 5, skill: "Power BI / Tableau", mentions: 4980, demand_velocity: "+12.0% YoY", category: "Data Visualization" }
+        { rank: 5, skill: "Tableau / Looker", mentions: 4980, demand_velocity: "+12.0% YoY", category: "Data Visualization" }
       ]
     }
   },
@@ -303,7 +303,7 @@ async function fetchMoroccoEmploymentData() {
       content = `Job_ID,Title,Company,Location,Portal,Date_Posted,Salary_MAD,Top_Skills\n` +
         `JOB-MA-2026-9812,Senior Data Engineer,Capgemini Morocco,Casablanca Nearshore,ReKrute,2026-08-02,22000-30000,Python;PostgreSQL;Pandas\n` +
         `JOB-MA-2026-9811,Full Stack Developer,CGI Maghreb,Casablanca Finance City,Emploi.ma,2026-08-02,18000-24000,React;TypeScript;Tailwind\n` +
-        `JOB-MA-2026-9810,BI Analyst,BMCE Bank,Rabat Agdal,ANAPEC,2026-08-01,15000-20000,PowerBI;SQL;StarSchema`;
+        `JOB-MA-2026-9810,BI Analyst,BMCE Bank,Rabat Agdal,ANAPEC,2026-08-01,15000-20000,SQL;StarSchema;DataViz`;
       mimeType = 'text/csv';
       filename = `MEIP_Morocco_Job_Postings_Sample.csv`;
     } else if (format === 'sql') {
@@ -723,7 +723,7 @@ CREATE TABLE IF NOT EXISTS fact_job_postings (
                     CSV Table Format
                   </h3>
                   <p className="font-sans-body text-xs text-gray-600 leading-relaxed">
-                    Flat tabular format ideal for Excel, Power BI, Tableau, SPSS, and R statistical analysis.
+                    Flat tabular format ideal for Excel, Tableau, SPSS, and R statistical analysis.
                   </p>
                   <div className="font-mono-code text-[10px] text-gray-400">
                     Delimited Columns • 1.8 MB

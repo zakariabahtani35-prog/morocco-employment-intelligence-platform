@@ -94,7 +94,7 @@ Explore the primary production modules, interface components, and live telemetry
   <!-- 3. Dashboard Preview Showcase -->
   <h4 align="left" style="color: #3B388E;">3. 📊 Live Market Intelligence & Decision Support Dashboard</h4>
   <img src="./docs/screenshots/dashboard-preview.png" alt="MEIP Live Market Intelligence Dashboard" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 3: Power BI decision support preview for exploring live recruitment KPIs, regional job density maps, requested technologies, and salary benchmarks.</em></p>
+  <p align="left"><em>Figure 3: Interactive decision support preview for exploring live recruitment KPIs, regional job density maps, requested technologies, and salary benchmarks.</em></p>
   <br />
 
   <!-- 4. FAQ & Footer Showcase -->

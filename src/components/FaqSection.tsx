@@ -233,7 +233,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenTicketsModal }) =>
             <div className="bg-[#E6004D] text-white p-6 rounded-2xl space-y-4 shadow-md">
               <div className="space-y-1">
                 <p className="font-sans-body font-bold text-xs uppercase tracking-widest text-white/90">READY TO EXPLORE DATA?</p>
-                <h4 className="font-space font-extrabold text-2xl uppercase tracking-tight">OPEN POWER BI DASHBOARD</h4>
+                <h4 className="font-space font-extrabold text-2xl uppercase tracking-tight">OPEN MARKET DASHBOARD</h4>
               </div>
               <p className="text-xs font-sans-body text-white/90 font-medium leading-relaxed">
                 Experience real-time interactive market metrics, skill demand heatmaps, and salary distributions across Morocco.

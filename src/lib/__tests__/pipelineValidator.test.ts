@@ -40,7 +40,7 @@ describe('Intelligence Engine JSON Response Parser (parseIntelligenceJsonRespons
   });
 
   it('handles trailing commas gracefully without crashing', () => {
-    const raw = '{"title": "Data Analyst", "skills": ["SQL", "PowerBI",],}';
+    const raw = '{"title": "Data Analyst", "skills": ["SQL", "Tableau",],}';
     const parsed = parseIntelligenceJsonResponse(raw);
     expect(parsed.title).toBe('Data Analyst');
   });

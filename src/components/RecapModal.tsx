@@ -14,7 +14,7 @@ export const RecapModal: React.FC<RecapModalProps> = ({ isOpen, onClose }) => {
       <div role="dialog" aria-modal="true" aria-label="MEIP Pipeline Demo Video" className="bg-white border border-[#E2E8F0] rounded-2xl w-full max-w-4xl p-4 sm:p-6 relative shadow-2xl space-y-4" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
           <div className="flex items-center gap-2 font-sans-body text-xs uppercase font-bold text-[#E6004D]">
-            <span>MEIP POWER BI & ETL PIPELINE</span>
+            <span>MEIP ANALYTICS & ETL PIPELINE</span>
             <span className="text-gray-400">•</span>
             <span className="text-[#3B388E]">DECISION SUPPORT DEMO</span>
           </div>

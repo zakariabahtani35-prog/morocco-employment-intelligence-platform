@@ -26,7 +26,7 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({ onOpenReca
           <div className="relative z-10 space-y-3">
             <div className="inline-flex items-center gap-2 bg-[#FCE4E8] border border-[#E6004D]/30 text-[#E6004D] px-3.5 py-1.5 rounded-full text-xs font-sans-body font-bold uppercase">
               <BarChart2 className="w-3.5 h-3.5" />
-              <span>POWER BI DECISION SUPPORT PREVIEW</span>
+              <span>DECISION SUPPORT PREVIEW</span>
             </div>
             <h2 className="font-space font-extrabold text-3xl sm:text-6xl text-[#3B388E] tracking-tight max-w-2xl">
               Explore Live Employment Intelligence & Market Dashboards
