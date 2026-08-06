@@ -22,7 +22,6 @@ interface CommandPaletteModalProps {
   isOpen: boolean;
   onClose: () => void;
   setCurrentView: (view: PageView) => void;
-  onOpenTicketsModal: () => void;
 }
 
 interface CommandItem {
@@ -38,8 +37,7 @@ interface CommandItem {
 export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
   isOpen,
   onClose,
-  setCurrentView,
-  onOpenTicketsModal
+  setCurrentView
 }) => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -55,18 +53,6 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
         setCurrentView('home');
         onClose();
       }
-    },
-    {
-      id: 'nav-api',
-      title: 'REST API Sandbox & Webhooks Export',
-      description: 'Explore live endpoints, test queries, and export datasets',
-      category: 'INTEGRATIONS',
-      icon: <Terminal className="w-4 h-4 text-[#3B388E]" />,
-      action: () => {
-        setCurrentView('api');
-        onClose();
-      },
-      badge: 'LIVE API'
     },
     {
       id: 'nav-travel',
@@ -100,18 +86,6 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
         setCurrentView('sponsors');
         onClose();
       }
-    },
-    {
-      id: 'action-tickets',
-      title: 'Request Attendee / Observer Pass',
-      description: 'Secure instant confirmation pass for MEIP defense presentation',
-      category: 'ACTIONS',
-      icon: <Ticket className="w-4 h-4 text-[#E6004D]" />,
-      action: () => {
-        onClose();
-        onOpenTicketsModal();
-      },
-      badge: 'FREE REGISTRATION'
     },
     {
       id: 'nav-faq',

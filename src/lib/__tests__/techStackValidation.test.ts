@@ -1,18 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { extractSalaryNumber } from '../supabaseService';
-import { TICKETS_DATA, SPONSORS_DATA, FAQ_DATA, EVENTS_DATA } from '../../data/mockData';
+import { SPONSORS_DATA, FAQ_DATA, EVENTS_DATA } from '../../data/mockData';
 
 describe('Technology Stack Integrity & Data Model Tests', () => {
   describe('Mock & Fallback Data Contracts', () => {
-    it('contains valid Tickets access modules for MEIP 2026', () => {
-      expect(TICKETS_DATA).toBeDefined();
-      expect(Array.isArray(TICKETS_DATA)).toBe(true);
-      expect(TICKETS_DATA.length).toBeGreaterThan(0);
-      const ids = TICKETS_DATA.map(t => t.id);
-      expect(ids).toContain('dashboard');
-      expect(ids).toContain('architecture');
-      expect(ids).toContain('pipeline');
-    });
 
     it('defines verified platform partners and sponsors', () => {
       expect(Array.isArray(SPONSORS_DATA)).toBe(true);

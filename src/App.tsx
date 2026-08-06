@@ -5,7 +5,6 @@ import { HeroSection } from './components/HeroSection';
 import { EverythingChainSection } from './components/EverythingChainSection';
 import { ProjectMetricsSection } from './components/ProjectMetricsSection';
 import { SystemArchitectureSection } from './components/SystemArchitectureSection';
-import { TicketsSection } from './components/TicketsSection';
 import { GetInvolvedSection } from './components/GetInvolvedSection';
 import { WhyBreakpointSection } from './components/WhyBreakpointSection';
 import { TechEcosystemSection } from './components/TechEcosystemSection';
@@ -25,11 +24,9 @@ import { SupabaseProvider } from './lib/SupabaseContext';
 
 // Dynamic Lazy Imports for Heavy Route Components & Modals
 const ExecutiveDashboard = lazy(() => import('./features/dashboard/components/ExecutiveDashboard').then(m => ({ default: m.ExecutiveDashboard })));
-const ApiSandboxPage = lazy(() => import('./components/ApiSandboxPage').then(m => ({ default: m.ApiSandboxPage })));
 const TravelPage = lazy(() => import('./components/TravelPage').then(m => ({ default: m.TravelPage })));
 const SponsorsPage = lazy(() => import('./components/SponsorsPage').then(m => ({ default: m.SponsorsPage })));
 const EventsPage = lazy(() => import('./components/EventsPage').then(m => ({ default: m.EventsPage })));
-const TicketModal = lazy(() => import('./components/TicketModal').then(m => ({ default: m.TicketModal })));
 const RecapModal = lazy(() => import('./components/RecapModal').then(m => ({ default: m.RecapModal })));
 const CommandPaletteModal = lazy(() => import('./components/CommandPaletteModal').then(m => ({ default: m.CommandPaletteModal })));
 const IntranetChatbot = lazy(() => import('./components/IntranetChatbot').then(m => ({ default: m.IntranetChatbot })));
@@ -45,15 +42,8 @@ const ComponentLoader: React.FC = () => (
 
 export default function App() {
   const [currentView, setCurrentView] = useState<PageView>('home');
-  const [isTicketsModalOpen, setIsTicketsModalOpen] = useState(false);
   const [isRecapModalOpen, setIsRecapModalOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
-  const [selectedTicketId, setSelectedTicketId] = useState<string>('general');
-
-  const handleOpenTicketModalWithId = (ticketId: string = 'general') => {
-    setSelectedTicketId(ticketId);
-    setIsTicketsModalOpen(true);
-  };
 
   const pageVariants = {
     initial: { opacity: 0, scale: 0.99, filter: 'blur(4px)', y: 16 },
@@ -77,7 +67,6 @@ export default function App() {
           <Header
             currentView={currentView}
             setCurrentView={setCurrentView}
-            onOpenTicketsModal={() => handleOpenTicketModalWithId('general')}
             onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
           />
         )}
@@ -96,7 +85,6 @@ export default function App() {
                   transition={pageTransition}
                 >
                   <HeroSection
-                    onOpenTicketsModal={() => handleOpenTicketModalWithId('general')}
                     onNavigateToDashboard={() => setCurrentView('dashboard')}
                   />
 
@@ -105,10 +93,6 @@ export default function App() {
                   <ProjectMetricsSection />
 
                   <SystemArchitectureSection />
-
-                  <TicketsSection
-                    onSelectTicket={(ticketId) => handleOpenTicketModalWithId(ticketId)}
-                  />
 
                   <GetInvolvedSection
                     onOpenSponsors={() => setCurrentView('sponsors')}
@@ -148,7 +132,7 @@ export default function App() {
                     }}
                   />
 
-                  <FaqSection onOpenTicketsModal={() => handleOpenTicketModalWithId('general')} />
+                  <FaqSection onNavigateToDashboard={() => setCurrentView('dashboard')} />
                 </motion.div>
               )}
 
@@ -166,19 +150,6 @@ export default function App() {
                 </motion.div>
               )}
 
-              {currentView === 'api' && (
-                <motion.div
-                  key="api"
-                  variants={pageVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  transition={pageTransition}
-                >
-                  <ApiSandboxPage />
-                </motion.div>
-              )}
-
               {currentView === 'travel' && (
                 <motion.div
                   key="travel"
@@ -190,7 +161,6 @@ export default function App() {
                 >
                   <TravelPage
                     setCurrentView={setCurrentView}
-                    onOpenTicketsModal={() => handleOpenTicketModalWithId('general')}
                   />
                 </motion.div>
               )}
@@ -231,7 +201,7 @@ export default function App() {
                   transition={pageTransition}
                   className="pt-24 min-h-screen"
                 >
-                  <FaqSection onOpenTicketsModal={() => handleOpenTicketModalWithId('general')} />
+                  <FaqSection onNavigateToDashboard={() => setCurrentView('dashboard')} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -243,12 +213,6 @@ export default function App() {
 
         {/* Interactive Modals */}
         <Suspense fallback={null}>
-          <TicketModal
-            isOpen={isTicketsModalOpen}
-            onClose={() => setIsTicketsModalOpen(false)}
-            initialTicketId={selectedTicketId}
-          />
-
           <RecapModal
             isOpen={isRecapModalOpen}
             onClose={() => setIsRecapModalOpen(false)}
@@ -258,7 +222,6 @@ export default function App() {
             isOpen={isCommandPaletteOpen}
             onClose={() => setIsCommandPaletteOpen(false)}
             setCurrentView={setCurrentView}
-            onOpenTicketsModal={() => handleOpenTicketModalWithId('general')}
           />
 
           {/* Floating Intranet AI Chatbot Widget */}

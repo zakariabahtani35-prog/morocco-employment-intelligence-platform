@@ -5,10 +5,10 @@ import { FAQ_DATA } from '../data/mockData';
 type CategoryFilter = 'all' | 'general' | 'data' | 'tech' | 'academic' | 'dashboard';
 
 interface FaqSectionProps {
-  onOpenTicketsModal?: () => void;
+  onNavigateToDashboard?: () => void;
 }
 
-export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenTicketsModal }) => {
+export const FaqSection: React.FC<FaqSectionProps> = ({ onNavigateToDashboard }) => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [openIds, setOpenIds] = useState<string[]>(['faq-1', 'faq-2']);
@@ -240,8 +240,8 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenTicketsModal }) =>
               </p>
               <button
                 onClick={() => {
-                  if (onOpenTicketsModal) {
-                    onOpenTicketsModal();
+                  if (onNavigateToDashboard) {
+                    onNavigateToDashboard();
                   } else {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }

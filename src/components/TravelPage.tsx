@@ -6,10 +6,9 @@ import { GoogleMapsLocationView } from './GoogleMapsLocationView';
 
 interface TravelPageProps {
   setCurrentView: (view: PageView) => void;
-  onOpenTicketsModal: () => void;
 }
 
-export const TravelPage: React.FC<TravelPageProps> = ({ setCurrentView, onOpenTicketsModal }) => {
+export const TravelPage: React.FC<TravelPageProps> = ({ setCurrentView }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'flights' | 'hotels' | 'visas'>('all');
 
   return (
@@ -157,7 +156,7 @@ export const TravelPage: React.FC<TravelPageProps> = ({ setCurrentView, onOpenTi
 
             <div className="lg:col-span-8 space-y-4 font-sans-body text-gray-600 text-base leading-relaxed">
               <p>
-                Researchers and students can request read-only REST API tokens or PostgreSQL view credentials through the <button onClick={onOpenTicketsModal} className="text-[#E6004D] hover:underline font-bold cursor-pointer">academic registration portal</button>.
+                Researchers and students can request read-only REST API tokens or PostgreSQL view credentials directly via the MEIP project maintainers.
               </p>
               <p>
                 All analytical datasets comply with CNDP guidelines and contain exclusively anonymized, aggregated public job market signals across Morocco.

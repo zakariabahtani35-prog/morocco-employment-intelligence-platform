@@ -8,14 +8,12 @@ import { X, ArrowUpRight, ArrowRight, LayoutDashboard, Command, Terminal } from 
 interface HeaderProps {
   currentView: PageView;
   setCurrentView: (view: PageView) => void;
-  onOpenTicketsModal: () => void;
   onOpenCommandPalette?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   currentView,
   setCurrentView,
-  onOpenTicketsModal,
   onOpenCommandPalette
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

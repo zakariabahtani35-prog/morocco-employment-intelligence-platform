@@ -5,11 +5,10 @@ import RotatingText from './RotatingText';
 import { SimplonLogo } from './SimplonLogo';
 
 interface HeroSectionProps {
-  onOpenTicketsModal?: () => void;
   onNavigateToDashboard?: () => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenTicketsModal, onNavigateToDashboard }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigateToDashboard }) => {
   return (
     <section className="relative w-full min-h-[85vh] pt-28 md:pt-36 pb-16 bg-[#F4F5F7] text-[#1A202C] overflow-hidden flex flex-col justify-between border-b border-[#E2E8F0]">
       {/* Decorative Full-Cover Image Backdrop */}
@@ -62,8 +61,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenTicketsModal, on
               onClick={() => {
                 if (onNavigateToDashboard) {
                   onNavigateToDashboard();
-                } else if (onOpenTicketsModal) {
-                  onOpenTicketsModal();
                 }
               }}
               className="bg-[#E6004D] hover:bg-[#C00F2F] text-white font-sans-body font-bold text-xs sm:text-sm uppercase px-6 py-3.5 rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-md hover:shadow-lg"

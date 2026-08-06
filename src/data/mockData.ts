@@ -1,36 +1,4 @@
-import { TicketType, Sponsor, EcosystemEvent, FAQItem, Announcement, Testimonial } from '../types';
-
-export const TICKETS_DATA: TicketType[] = [
-  {
-    id: 'dashboard',
-    name: 'Interactive Web Dashboard',
-    price: 0,
-    badge: 'PRIMARY ACCESS',
-    description: 'Real-time regional job maps, skill matrices, salary analytics, industry hiring rankings, and automated AI market trend synthesis.',
-    featured: true
-  },
-  {
-    id: 'architecture',
-    name: 'Data Architecture Specs',
-    price: 0,
-    badge: 'SYSTEM ARCHITECTURE',
-    description: 'Detailed Star Schema OLAP database structure, ERD relation diagrams, Supabase PostgreSQL configuration, and ETL workflow specs.'
-  },
-  {
-    id: 'pipeline',
-    name: 'Automated ELT Pipeline',
-    price: 0,
-    badge: 'AUTOMATION PIPELINE',
-    description: 'n8n workflow schedules, Playwright multi-portal scrapers, data cleaning engines, and AI skill extraction functions.'
-  },
-  {
-    id: 'github',
-    name: 'Open Source Repository',
-    price: 0,
-    badge: 'CODEBASE ACCESS',
-    description: 'Full GitHub repository with React 18, TypeScript, Tailwind CSS, Recharts data visualization, and Express backend.'
-  }
-];
+import { Sponsor, EcosystemEvent, FAQItem, Announcement, Testimonial } from '../types';
 
 export const SPONSORS_DATA: Sponsor[] = [
   {

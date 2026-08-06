@@ -1,14 +1,4 @@
-export type PageView = 'home' | 'dashboard' | 'travel' | 'sponsors' | 'events' | 'faq' | 'api';
-
-export interface TicketType {
-  id: string;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  badge?: string;
-  description: string;
-  featured?: boolean;
-}
+export type PageView = 'home' | 'dashboard' | 'travel' | 'sponsors' | 'events' | 'faq';
 
 export interface Sponsor {
   name: string;
