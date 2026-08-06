@@ -1,26 +1,51 @@
-# 🚀 MOROCCO EMPLOYMENT INTELLIGENCE PLATFORM (MEIP)
-
-[![Build Status](https://img.shields.io/github/actions/workflow/status/meip/solana-breakpoint-2026/ci.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=white&color=00C853)](https://github.com/meip/solana-breakpoint-2026/actions)
-[![React](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Security Compliance](https://img.shields.io/badge/Security-RLS_Enforced-00E676?style=for-the-badge&logo=shield&logoColor=white)](#-security-boundary--environment-isolation)
-[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-Automated_GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](#-continuous-integration--deployment-cicd)
-[![n8n ETL Automation](https://img.shields.io/badge/n8n-Automated_Scrapers-FF6D5A?style=for-the-badge&logo=n8n&logoColor=white)](./n8n-workflows/)
-
 <div align="center">
   <br />
-  <h3 style="color: #3B388E;">📹 Morocco Employment Intelligence Platform (MEIP) - Live System Demo</h3>
+  <h1 align="center" style="font-family: 'Space Grotesk', sans-serif; font-size: 3rem; font-weight: 900; color: #3B388E; letter-spacing: -1px; margin-bottom: 0;">
+    <span style="color: #E6004D;">M</span><span style="color: #3B388E;">EIP</span> <span style="color: #E6004D;">2026</span>
+  </h1>
+  
+  <h3 align="center" style="letter-spacing: 4px; color: #1A202C; text-transform: uppercase; font-weight: 800; margin-top: 8px;">
+    ◆ MOROCCO EMPLOYMENT INTELLIGENCE PLATFORM ◆
+  </h3>
+  <br />
+
+  <h4 align="center" style="color: #3B388E; font-weight: 700; font-size: 1.25rem;">
+    Engineering the Future of Moroccan Labor Market Intelligence
+  </h4>
+
+  <p align="center" style="max-width: 850px; color: #4A5568; font-size: 1.05rem; line-height: 1.6;">
+    <em>An enterprise-grade data platform for the Moroccan employment market — from raw multi-portal web harvesting across <b>ANAPEC, ReKrute, Emploi.ma, DreamJob</b>, and <b>Novojob</b> to Star-Schema warehousing, automated NLP skill extraction feature stores, LLM salary estimation, and executive BI dashboards.</em>
+  </p>
+  <br />
+  <hr style="border: none; border-top: 1px solid #E2E8F0; width: 90%; margin: 15px auto;" />
+  <br />
+
+  <!-- Two-Tone Custom Badge Matrix matching Website Brand Colors (#1A202C & #E6004D) -->
+  <p align="center">
+    <a href="https://www.python.org/"><img src="https://img.shields.io/badge/PYTHON-3.11+-E6004D?style=for-the-badge&logo=python&logoColor=white&labelColor=1A202C" alt="Python 3.11+" /></a>
+    <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/POSTGRESQL-15-E6004D?style=for-the-badge&logo=postgresql&logoColor=white&labelColor=1A202C" alt="PostgreSQL 15" /></a>
+    <a href="https://react.dev/"><img src="https://img.shields.io/badge/REACT-19.0-E6004D?style=for-the-badge&logo=react&logoColor=white&labelColor=1A202C" alt="React 19" /></a>
+    <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/VITE-REST_SERVICES-E6004D?style=for-the-badge&logo=vite&logoColor=white&labelColor=1A202C" alt="Vite REST" /></a>
+    <br />
+    <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TYPESCRIPT-INTELLIGENCE_DASHBOARD-E6004D?style=for-the-badge&logo=typescript&logoColor=white&labelColor=1A202C" alt="TypeScript" /></a>
+    <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/DOCKER-CONTAINERIZED-E6004D?style=for-the-badge&logo=docker&logoColor=white&labelColor=1A202C" alt="Docker" /></a>
+    <a href="./n8n-workflows/"><img src="https://img.shields.io/badge/n8n-ETL_ORCHESTRATION-E6004D?style=for-the-badge&logo=n8n&logoColor=white&labelColor=1A202C" alt="n8n Workflows" /></a>
+    <br />
+    <a href="https://pandas.pydata.org/"><img src="https://img.shields.io/badge/PANDAS-TRANSFORMATION_ENGINE-E6004D?style=for-the-badge&logo=pandas&logoColor=white&labelColor=1A202C" alt="Pandas Engine" /></a>
+    <a href="https://supabase.com/"><img src="https://img.shields.io/badge/SUPABASE-DATA_WAREHOUSE-E6004D?style=for-the-badge&logo=supabase&logoColor=white&labelColor=1A202C" alt="Supabase" /></a>
+    <a href="https://en.wikipedia.org/wiki/Star_schema"><img src="https://img.shields.io/badge/DATA_WAREHOUSE-STAR_SCHEMA-E6004D?style=for-the-badge&logo=databricks&logoColor=white&labelColor=1A202C" alt="Star Schema" /></a>
+    <a href="./LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-E6004D?style=for-the-badge&logo=open-source-initiative&logoColor=white&labelColor=1A202C" alt="MIT License" /></a>
+  </p>
+  <br />
+
+  <!-- Live Showcase Video -->
+  <h3 align="center" style="color: #3B388E;">📹 Morocco Employment Intelligence Platform (MEIP) - Live System Demo</h3>
   <video src="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/sign/anan/video-erasio.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82OGY5YzJlNi0yYmI4LTQ2MjQtYjJjOC1lYTNkYmQyMDdiYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbmFuL3ZpZGVvLWVyYXNpby5tcDQiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg2MDIzMDc5LCJleHAiOjE4MTc1NTkwNzl9.aWJ4RlyVLTZxyfUTBMuHQZaF1iu80atMwC25q-4h_HI" width="100%" controls style="border-radius: 12px; border: 2px solid #E2E8F0; box-shadow: 0 12px 36px rgba(59, 56, 142, 0.15);">
     Your browser does not support HTML5 video. Click <a href="https://dkmqcccyzfhytnpwzcdr.supabase.co/storage/v1/object/sign/anan/video-erasio.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV82OGY5YzJlNi0yYmI4LTQ2MjQtYjJjOC1lYTNkYmQyMDdiYTgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJhbmFuL3ZpZGVvLWVyYXNpby5tcDQiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzg2MDIzMDc5LCJleHAiOjE4MTc1NTkwNzl9.aWJ4RlyVLTZxyfUTBMuHQZaF1iu80atMwC25q-4h_HI">here to view the showcase video</a>.
   </video>
   <p><em>Real-Time Executive Dashboard & Automated Pipeline Telemetry Showcase</em></p>
   <br />
 </div>
-
-> An enterprise-grade, automated data-ingestion, NLP skill extraction, and real-time analytical intelligence platform capturing, structuring, and visualizing national labor market dynamics across all 12 regions of the Kingdom of Morocco.
 
 ---
 
@@ -53,35 +78,29 @@ Explore the primary production modules, interface components, and live telemetry
 
 <div align="center">
   <br />
-
-  <!-- 1. Full Platform Preview Showcase -->
-  <h4 align="left" style="color: #3B388E;">1. 📜 Complete End-to-End Platform Architecture & Interface (Full Preview)</h4>
-  <img src="./docs/screenshots/full-platform-preview.png" alt="MEIP Full Platform Interface Preview" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 1: Complete end-to-end platform page architecture capturing all interactive components, scrapers, data warehouse, and analytics sections.</em></p>
-  <br />
   
-  <!-- 2. Hero Landing Showcase -->
-  <h4 align="left" style="color: #3B388E;">2. 🌐 National Employment Intelligence Hero & Landing Module</h4>
+  <!-- 1. Hero Landing Showcase -->
+  <h4 align="left" style="color: #3B388E;">1. 🌐 National Employment Intelligence Hero & Landing Module</h4>
   <img src="./docs/screenshots/hero-section.png" alt="MEIP Hero Landing Module" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 2: High-impact hero landing module highlighting automated extraction across ANAPEC, ReKrute, Emploi.ma, DreamJob, and Novojob.</em></p>
+  <p align="left"><em>Figure 1: High-impact hero landing module highlighting automated extraction across ANAPEC, ReKrute, Emploi.ma, DreamJob, and Novojob.</em></p>
   <br />
 
-  <!-- 3. Architecture & Pipeline Showcase -->
-  <h4 align="left" style="color: #3B388E;">3. ⚙️ Core Architecture & Interactive Feature Pipeline</h4>
+  <!-- 2. Architecture & Pipeline Showcase -->
+  <h4 align="left" style="color: #3B388E;">2. ⚙️ Core Architecture & Interactive Feature Pipeline</h4>
   <img src="./docs/screenshots/architecture-features.png" alt="MEIP Core Architecture & Features" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 3: Interactive 3-tier pipeline explorer detailing automatic multi-source collection, Supabase PostgreSQL Star Schema OLAP, and AI decision support.</em></p>
+  <p align="left"><em>Figure 2: Interactive 3-tier pipeline explorer detailing automatic multi-source collection, Supabase PostgreSQL Star Schema OLAP, and AI decision support.</em></p>
   <br />
 
-  <!-- 4. Dashboard Preview Showcase -->
-  <h4 align="left" style="color: #3B388E;">4. 📊 Live Market Intelligence & Decision Support Dashboard</h4>
+  <!-- 3. Dashboard Preview Showcase -->
+  <h4 align="left" style="color: #3B388E;">3. 📊 Live Market Intelligence & Decision Support Dashboard</h4>
   <img src="./docs/screenshots/dashboard-preview.png" alt="MEIP Live Market Intelligence Dashboard" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 4: Power BI decision support preview for exploring live recruitment KPIs, regional job density maps, requested technologies, and salary benchmarks.</em></p>
+  <p align="left"><em>Figure 3: Power BI decision support preview for exploring live recruitment KPIs, regional job density maps, requested technologies, and salary benchmarks.</em></p>
   <br />
 
-  <!-- 5. FAQ & Footer Showcase -->
-  <h4 align="left" style="color: #3B388E;">5. ❓ Technical FAQ Accordion & Live Countdown Telemetry</h4>
+  <!-- 4. FAQ & Footer Showcase -->
+  <h4 align="left" style="color: #3B388E;">4. ❓ Technical FAQ Accordion & Live Countdown Telemetry</h4>
   <img src="./docs/screenshots/faq-footer.png" alt="MEIP FAQ Accordion & Live Footer" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 5: Comprehensive technical FAQ accordion and live defense countdown timer with direct author contact integration.</em></p>
+  <p align="left"><em>Figure 4: Comprehensive technical FAQ accordion and live defense countdown timer with direct author contact integration.</em></p>
   <br />
 </div>
 
