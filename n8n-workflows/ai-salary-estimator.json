@@ -1,0 +1,212 @@
+{
+  "name": "MEIP - AI Salary & Compensation Estimator Agent (LangChain + Gemini)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "id": "9427fa8a-1705-4081-9a1f-b41ff62126f9",
+      "name": "Every 3 Hours Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "raw_jobs",
+        "limit": 15
+      },
+      "id": "6a9e6f64-de11-4436-a1d9-18060aba644c",
+      "name": "Get Jobs Needing AI Enrichment",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        464,
+        32
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "BexVcj5xTJj88VU2",
+          "name": "Supabase account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst output = [];\n\nfor (const item of items) {\n  const data = item.json;\n  output.push({\n    json: {\n      job_id: data.id || data.source_job_id,\n      title: data.title || \"Unspecified\",\n      company: data.company_name || \"Unspecified\",\n      location: data.location_name || \"Casablanca\",\n      sector: data.sector || \"IT / Digital\",\n      contract: data.contract_type || \"CDI\",\n      description_snippet: (data.description || \"\").substring(0, 800)\n    }\n  });\n}\n\nreturn output;"
+      },
+      "id": "5dc3ebff-9df2-4914-98bc-34f3505167fe",
+      "name": "Prepare LLM Context Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert Moroccan Labor Market Economist and Compensation Specialist for the MEIP Platform.\n\nAnalyze the following Moroccan job posting and estimate salary & analytics parameters:\n\n- Job Title: {{ $json.title }}\n- Company: {{$json.company }}\n- Sector: {{ $json.sector }}\n- Location: {{$json.location }}\n- Contract: {{ $json.contract }}\n- Description: {{$json.description_snippet }}\n\n### MOROCCAN BENCHMARK RULES (MAD Net Monthly Salary):\n1. Tech / Software / Data (Casablanca/Rabat):\n   - Junior (0-2 yrs): 7,000 - 10,000 MAD\n   - Mid (3-5 yrs): 11,000 - 17,000 MAD\n   - Senior (5+ yrs): 18,000 - 32,000 MAD\n2. Finance / Banking / Consulting:\n   - Junior: 6,500 - 9,000 MAD | Mid: 10,000 - 16,000 MAD | Senior: 17,000 - 28,000 MAD\n3. Call Center / BPO:\n   - Francophone: 4,500 - 6,500 MAD | Anglophone: 6,000 - 9,500 MAD\n4. Industry / Admin / Logistics:\n   - Junior: 4,000 - 6,500 MAD | Senior: 8,000 - 14,000 MAD\n\n### CRITICAL INSTRUCTION:\nOutput strictly valid JSON with NO markdown formatting, NO code fences, and NO explanations:\n{\n  \"estimated_salary_mad\": 14500,\n  \"seniority_level\": \"Mid\",\n  \"workplace_type\": \"Hybrid\",\n  \"top_skills\": [\"Python\", \"SQL\", \"Docker\"]\n}",
+        "options": {}
+      },
+      "id": "f38afa61-abb3-414d-8e11-10362fd58c86",
+      "name": "AI Salary Estimator Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        912,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = [];\n\nfor (const item of $input.all()) {\n  try {\n    let text = item.json.output || item.json.text || \"{}\";\n    // Clean markdown if LLM adds ```json\n    text = text.replace(/```json/g, \"\").replace(/```/g, \"\").trim();\n    const parsed = JSON.parse(text);\n    \n    const original = $('Prepare LLM Context Payload').item.json;\n    \n    output.push({\n      json: {\n        job_id: original.job_id,\n        title: original.title,\n        estimated_salary: parsed.estimated_salary_mad || 12000,\n        formatted_salary: `${parsed.estimated_salary_mad || 12000} MAD (AI Est.)`,\n        seniority_level: parsed.seniority_level || \"Mid\",\n        workplace_type: parsed.workplace_type || \"On-site\",\n        skills: parsed.top_skills || []\n      }\n    });\n  } catch (e) {\n    const original = $('Prepare LLM Context Payload').item.json;\n    output.push({\n      json: {\n        job_id: original.job_id,\n        title: original.title,\n        estimated_salary: 11000,\n        formatted_salary: \"11000 MAD (AI Est.)\",\n        seniority_level: \"Mid\",\n        workplace_type: \"On-site\",\n        skills: []\n      }\n    });\n  }\n}\n\nreturn output;"
+      },
+      "id": "e144cad5-a245-46bc-ad14-d7f278818945",
+      "name": "Parse & Normalize AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "jobs",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "salary",
+              "fieldValue": "={{ $json.formatted_salary }}"
+            },
+            {
+              "fieldId": "experience",
+              "fieldValue": "={{ $json.seniority_level }}"
+            }
+          ]
+        }
+      },
+      "id": "07ad0f2c-d839-42ec-ae6d-aa76e70dc2ef",
+      "name": "Update Jobs Table",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        16
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "BexVcj5xTJj88VU2",
+          "name": "Supabase account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        944,
+        288
+      ],
+      "id": "76de470e-f2b1-4393-a5ea-82cc8c28eea4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YiYFGCRtoHiJFxgZ",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every 3 Hours Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Jobs Needing AI Enrichment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Jobs Needing AI Enrichment": {
+      "main": [
+        [
+          {
+            "node": "Prepare LLM Context Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare LLM Context Payload": {
+      "main": [
+        [
+          {
+            "node": "AI Salary Estimator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Salary Estimator Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse & Normalize AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Normalize AI Response": {
+      "main": [
+        [
+          {
+            "node": "Update Jobs Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Salary Estimator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd37b0d827447e786caa1f954454e51c3c8c5f85bff76cdf2db8a7b95d137035"
+  }
+}

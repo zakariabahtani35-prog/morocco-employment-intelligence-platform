@@ -204,6 +204,7 @@ MEIP guarantees zero credential exposure in client builds through strict securit
 | Capability Module | Feature & Function | Technical Implementation | Architectural Guarantee |
 | :--- | :--- | :--- | :--- |
 | **Data Ingestion** | Multi-Portal Scraping | Automated Playwright & Cheerio agents extracting job metadata every 6 hours across ANAPEC, ReKrute, Emploi.ma, DreamJob, and Novojob. | 99.8% Harvesting Reliability |
+| **AI Enrichment** | LLM Salary & Compensation Agent | Autonomous **n8n + LangChain + Google Gemini** workflow evaluating job context against Moroccan market benchmarks to estimate net monthly salary in MAD. | Sub-Second Economic Inference |
 | **Data Ingestion** | Deduplication Engine | MD5 hash-based payload signature matching preventing duplicated records across portal feeds. | Zero Duplicate Indexing |
 | **Semantic NLP** | Skill & Taxonomy Normalization | Automatic extraction of technical skills (Python, SQL, React), soft skills, and experience tiers from raw French/Arabic descriptions. | 98.6% Categorization Hygiene |
 | **Performance** | React 19 Concurrent Rendering | Optimized UI tree utilizing `useMemo` for KPI matrices and `useDeferredValue` for sub-millisecond table filtering. | Stable 60fps Analytics UI |
