@@ -1,5 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { supabase as defaultSupabase, isSupabaseConfigured } from './supabase';
+import { syncAndUpsertSkillsToSupabase, fetchSkillsFromSupabase, extractDynamicSkillsFromText } from './skillsRepository';
 
 export interface DashboardFilterOptions {
   city?: string;
@@ -282,17 +283,7 @@ const SKILL_RULES: { name: string; category: 'Tech' | 'Cloud' | 'Data' | 'Manage
 ];
 
 export function extractSkillsForRecord(title: string = '', desc: string = ''): string[] {
-  const text = (title + ' ' + desc).toLowerCase();
-  const matched: string[] = [];
-
-  for (const rule of SKILL_RULES) {
-    if (rule.keywords.some(kw => text.includes(kw))) {
-      matched.push(rule.name);
-    }
-  }
-
-  // Return strictly parsed skills from text (zero hardcoded fake defaults)
-  return Array.from(new Set(matched));
+  return extractDynamicSkillsFromText(title, desc);
 }
 
 /**
@@ -514,21 +505,17 @@ export async function fetchSupabaseDashboardData(
       };
     });
 
-    // Build Skills List
-    const skillsList: SkillItem[] = Object.entries(skillCounts)
-      .map(([name, val]) => ({
-        name,
-        category: val.category,
-        count: val.count,
-        percentage: Math.min(100, Math.round((val.count / Math.max(1, filteredRecords.length)) * 100)),
-        avgSalary: val.salCount > 0 ? Math.round(val.totalSal / val.salCount) : (avgSalaryMAD || 0),
-        growth: `+${Math.min(45, Math.max(12, val.count * 8))}%`
-      }))
-      .sort((a, b) => b.count - a.count);
+    // Sync & fetch official skills data from Supabase `skills` table
+    const skillsList: SkillItem[] = await syncAndUpsertSkillsToSupabase(client, allRawJobRecords);
 
-    // Build Skill Category Distribution
-    const totalSkillHits = Object.values(skillCatMap).reduce((a, b) => a + b, 0) || 1;
-    const skillsCategoryDistribution: SkillCategoryDistribution[] = Object.entries(skillCatMap).map(([category, count]) => ({
+    // Compute Skill Category Distribution dynamically from official skills table data
+    const officialSkillCatMap: Record<string, number> = {};
+    skillsList.forEach(s => {
+      officialSkillCatMap[s.category] = (officialSkillCatMap[s.category] || 0) + s.count;
+    });
+
+    const totalSkillHits = Object.values(officialSkillCatMap).reduce((a, b) => a + b, 0) || 1;
+    const skillsCategoryDistribution: SkillCategoryDistribution[] = Object.entries(officialSkillCatMap).map(([category, count]) => ({
       category,
       count,
       share: `${((count / totalSkillHits) * 100).toFixed(1)}%`
