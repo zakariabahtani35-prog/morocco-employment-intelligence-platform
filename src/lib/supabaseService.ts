@@ -283,7 +283,7 @@ const SKILL_RULES: { name: string; category: 'Tech' | 'Cloud' | 'Data' | 'Manage
 ];
 
 export function extractSkillsForRecord(title: string = '', desc: string = ''): string[] {
-  return extractDynamicSkillsFromText(title, desc);
+  return extractDynamicSkillsFromText(title, desc).map(s => s.name);
 }
 
 /**
