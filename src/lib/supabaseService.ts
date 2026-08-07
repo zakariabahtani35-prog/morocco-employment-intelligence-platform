@@ -506,7 +506,7 @@ export async function fetchSupabaseDashboardData(
     });
 
     // Sync & fetch official skills data from Supabase `skills` table
-    const skillsList: SkillItem[] = await syncAndUpsertSkillsToSupabase(client, allRawJobRecords);
+    const skillsList: SkillItem[] = await syncAndUpsertSkillsToSupabase(client, filteredRecords);
 
     // Compute Skill Category Distribution dynamically from official skills table data
     const officialSkillCatMap: Record<string, number> = {};
