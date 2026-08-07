@@ -1,5 +1,5 @@
 import React, { useState, lazy, Suspense } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { EverythingChainSection } from './components/EverythingChainSection';
@@ -53,7 +53,7 @@ export default function App() {
 
   const pageTransition = {
     duration: 0.35,
-    ease: [0.16, 1, 0.3, 1]
+    ease: 'easeInOut' as const
   };
 
   return (

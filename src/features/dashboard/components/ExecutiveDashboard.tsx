@@ -40,6 +40,14 @@ import { AiInsightsSection } from './AiInsightsSection';
 import { SupabaseConfigModal, SUPABASE_RPC_SQL } from './SupabaseConfigModal';
 import { DashboardFiltersToolbar } from './DashboardFiltersToolbar';
 
+// New Enterprise Intelligence Modules
+import { MoroccoEmploymentHeatMap } from './MoroccoEmploymentHeatMap';
+import { SkillsIntelligenceDashboard } from './SkillsIntelligenceDashboard';
+import { PredictiveAnalyticsSection } from './PredictiveAnalyticsSection';
+import { CompanyProfileDrawer } from './CompanyProfileDrawer';
+import { JobDetailsDrawer } from './JobDetailsDrawer';
+import { CompanyListingItem, JobRecordItem } from '../../../lib/supabaseService';
+
 export const ACTIVE_SUPABASE_URL = SUPABASE_URL;
 export const ACTIVE_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 
@@ -54,6 +62,10 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
   const [activeSidebarItem, setActiveSidebarItem] = useState('Dashboard');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Drawers State
+  const [selectedCompanyProfile, setSelectedCompanyProfile] = useState<CompanyListingItem | null>(null);
+  const [selectedJobDetail, setSelectedJobDetail] = useState<JobRecordItem | null>(null);
 
   // Live Supabase State (100% Dynamic)
   const [liveData, setLiveData] = useState<DashboardLiveData | null>(null);
@@ -263,14 +275,17 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
   // Dynamic Sidebar Navigation Items
   const sidebarMenuItems = [
     { label: 'Dashboard', icon: LayoutDashboard },
+    { label: 'Heat Map', icon: MapPin },
+    { label: 'Skills Intelligence', icon: Cpu },
+    { label: 'Predictive AI', icon: Sparkles },
     { label: 'Executive KPIs', icon: Activity },
     { label: 'Job Market', icon: Briefcase },
     { label: 'Companies', icon: Building2 },
     { label: 'Industries', icon: BarChart3 },
     { label: 'Salary Intelligence', icon: DollarSign },
     { label: 'Geographic Analysis', icon: Globe },
-    { label: 'Pipeline Monitor', icon: Cpu },
-    { label: 'AI Insights', icon: Sparkles }
+    { label: 'Pipeline Monitor', icon: Database },
+    { label: 'AI Insights', icon: Zap }
   ];
 
   // Dynamic Top Companies Filter
@@ -461,7 +476,32 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
             kpis={dynamicKpis}
           />
 
-          {/* SECTION 2: DYNAMIC RECRUITMENT TRENDS */}
+          {/* SECTION 2: MOROCCO EMPLOYMENT HEAT MAP */}
+          <MoroccoEmploymentHeatMap
+            isLoading={isLoadingSupabase}
+            isDarkMode={isDarkMode}
+            citiesData={liveData?.citiesData}
+            selectedCity={selectedCity}
+            setSelectedCity={setSelectedCity}
+          />
+
+          {/* SECTION 3: SKILLS INTELLIGENCE DASHBOARD */}
+          <SkillsIntelligenceDashboard
+            isLoading={isLoadingSupabase}
+            isDarkMode={isDarkMode}
+            skillsList={liveData?.skillsList}
+            skillsCategoryDistribution={liveData?.skillsCategoryDistribution}
+          />
+
+          {/* SECTION 4: PREDICTIVE LABOR MARKET ANALYTICS */}
+          <PredictiveAnalyticsSection
+            isLoading={isLoadingSupabase}
+            isDarkMode={isDarkMode}
+            predictiveForecasts={liveData?.predictiveForecasts}
+            totalActiveJobs={liveData?.totalActiveJobs}
+          />
+
+          {/* SECTION 5: DYNAMIC RECRUITMENT TRENDS */}
           <RecruitmentTrendsChart
             isLoading={isLoadingSupabase}
             isDarkMode={isDarkMode}
@@ -483,14 +523,15 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
             />
           </div>
 
-          {/* SECTION 5: TOP HIRING COMPANIES TABLE */}
+          {/* SECTION 7: TOP HIRING COMPANIES TABLE */}
           <TopEmployersTable
             isLoading={isLoadingSupabase}
             isDarkMode={isDarkMode}
             filteredCompanies={filteredCompanies}
+            onSelectCompany={(comp) => setSelectedCompanyProfile(comp)}
           />
 
-          {/* SECTION 6: MOROCCO REGIONS FOOTPRINT */}
+          {/* SECTION 8: MOROCCO REGIONS FOOTPRINT */}
           <RegionalFootprintMap
             isLoading={isLoadingSupabase}
             isDarkMode={isDarkMode}
@@ -499,7 +540,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
             setSelectedCity={setSelectedCity}
           />
 
-          {/* SECTION 7: PIPELINE LOGS HEALTH MONITOR */}
+          {/* SECTION 9: PIPELINE LOGS HEALTH MONITOR */}
           <PipelineLogsMonitor
             isLoading={isLoadingSupabase}
             isDarkMode={isDarkMode}
@@ -508,7 +549,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
             deadLetterLogs={liveData?.deadLetterLogs}
           />
 
-          {/* SECTION 8: AI EXECUTIVE INSIGHTS */}
+          {/* SECTION 10: AI EXECUTIVE INSIGHTS */}
           <AiInsightsSection
             isDarkMode={isDarkMode}
             liveData={liveData}
@@ -534,6 +575,24 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
           setIsSupabaseModalOpen(false);
           await handleRefreshData();
         }}
+      />
+
+      {/* COMPANY PROFILE INTERACTIVE DRAWER */}
+      <CompanyProfileDrawer
+        isOpen={Boolean(selectedCompanyProfile)}
+        onClose={() => setSelectedCompanyProfile(null)}
+        company={selectedCompanyProfile}
+        companyJobs={(liveData?.allJobsList || []).filter(j => j.company.toLowerCase().includes(selectedCompanyProfile?.name.toLowerCase() || ''))}
+        isDarkMode={isDarkMode}
+        onSelectJob={(j) => setSelectedJobDetail(j)}
+      />
+
+      {/* JOB DETAILS INTERACTIVE DRAWER */}
+      <JobDetailsDrawer
+        isOpen={Boolean(selectedJobDetail)}
+        onClose={() => setSelectedJobDetail(null)}
+        job={selectedJobDetail}
+        isDarkMode={isDarkMode}
       />
 
     </div>

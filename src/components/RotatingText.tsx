@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
-import { motion, AnimatePresence, Transition, TargetAndTransition, VariantLabels } from 'motion/react';
+import { motion, AnimatePresence, Transition, TargetAndTransition, VariantLabels } from 'framer-motion';
 
 import './RotatingText.css';
 
@@ -32,12 +32,12 @@ export interface RotatingTextProps {
   mainClassName?: string;
   splitLevelClassName?: string;
   elementLevelClassName?: string;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref) => {
   const {
-    texts,
+    texts = [],
     transition = { type: 'spring', damping: 25, stiffness: 300 },
     initial = { y: '100%', opacity: 0 },
     animate = { y: 0, opacity: 1 },
@@ -51,9 +51,9 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref)
     auto = true,
     splitBy = 'characters',
     onNext,
-    mainClassName,
-    splitLevelClassName,
-    elementLevelClassName,
+    mainClassName = '',
+    splitLevelClassName = '',
+    elementLevelClassName = '',
     ...rest
   } = props;
 

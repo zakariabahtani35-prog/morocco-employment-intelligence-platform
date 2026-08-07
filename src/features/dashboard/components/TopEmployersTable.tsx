@@ -1,25 +1,21 @@
 import React from 'react';
 import { Building2 } from 'lucide-react';
+import { CompanyListingItem } from '../../../lib/supabaseService';
 
-export interface CompanyItem {
-  name: string;
-  code: string;
-  category: string;
-  openJobs: number;
-  avgSalary: string;
-  hiringRate: string;
-}
+export type CompanyItem = CompanyListingItem;
 
 interface TopEmployersTableProps {
   isLoading: boolean;
   isDarkMode: boolean;
-  filteredCompanies: CompanyItem[];
+  filteredCompanies: CompanyListingItem[];
+  onSelectCompany?: (company: CompanyListingItem) => void;
 }
 
 export const TopEmployersTable: React.FC<TopEmployersTableProps> = ({
   isLoading,
   isDarkMode,
-  filteredCompanies
+  filteredCompanies,
+  onSelectCompany
 }) => {
   return (
     <div id="companies" className={`p-6 rounded-2xl border shadow-xs space-y-4 ${
@@ -61,14 +57,16 @@ export const TopEmployersTable: React.FC<TopEmployersTableProps> = ({
               {filteredCompanies.map((c, i) => (
                 <tr 
                   key={i}
-                  className="hover:bg-[#F8F9FC] dark:hover:bg-[#27272A]/50 transition-colors"
+                  onClick={() => onSelectCompany?.(c)}
+                  className="hover:bg-[#F8F9FC] dark:hover:bg-[#27272A]/50 transition-colors cursor-pointer"
+                  title="Click to view interactive company profile"
                 >
                   <td className="py-3 px-4 font-bold text-[#0F172A] dark:text-zinc-100 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center border shrink-0 bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20">
                       <Building2 className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-space font-bold text-xs">{c.name}</span>
+                      <span className="font-space font-bold text-xs hover:text-[#E6004D] transition-colors">{c.name}</span>
                       <span className="font-mono-code text-[10px] text-gray-400 dark:text-zinc-500 uppercase">{c.code}</span>
                     </div>
                   </td>
