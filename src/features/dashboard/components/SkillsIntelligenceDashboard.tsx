@@ -44,7 +44,7 @@ const isCategoryMatch = (skillCategory: string, selectedTab: string): boolean =>
     return ['data', 'database', 'analytics'].some(c => catLower.includes(c));
   }
   if (tabLower === 'management') {
-    return ['management', 'soft', 'leadership', 'agile'].some(c => catLower.includes(c));
+    return ['management', 'soft', 'industry', 'leadership', 'agile'].some(c => catLower.includes(c));
   }
   if (tabLower === 'language') {
     return ['language', 'lang'].some(c => catLower.includes(c));

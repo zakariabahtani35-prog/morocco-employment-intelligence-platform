@@ -48,12 +48,12 @@ const EXTENSIVE_SKILL_PATTERNS: { name: string; category: string; keywords: stri
   { name: 'Tableau', category: 'tool', keywords: ['tableau', 'data visualization'] },
   { name: 'Big Data / Spark', category: 'database', keywords: ['spark', 'pyspark', 'hadoop', 'big data', 'snowflake'] },
 
-  // Soft Skills & Management
+  // Soft Skills & Industry / Management
   { name: 'Excel / Finance', category: 'tool', keywords: ['excel', 'comptabilité', 'finance', 'audit', 'contrôle de gestion'] },
-  { name: 'Odoo / ERP', category: 'tool', keywords: ['odoo', 'erp', 'sap'] },
+  { name: 'Odoo / ERP', category: 'industry', keywords: ['odoo', 'erp', 'sap'] },
   { name: 'Agile / Scrum', category: 'soft', keywords: ['agile', 'scrum', 'kanban', 'jira'] },
   { name: 'Management / Leadership', category: 'soft', keywords: ['management', 'gestion', 'responsable', 'chef de projet', 'director', 'lead'] },
-  { name: 'Sales / Business Dev', category: 'soft', keywords: ['sales', 'commercial', 'prospection', 'vente', 'business development'] },
+  { name: 'Sales / Business Dev', category: 'industry', keywords: ['sales', 'commercial', 'prospection', 'vente', 'business development'] },
 
   // Languages
   { name: 'French', category: 'language', keywords: ['français', 'french', 'francais', 'fr'] },
@@ -78,74 +78,72 @@ export function extractDynamicSkillsFromText(title: string = '', description: st
 }
 
 /**
+ * Maps PostgreSQL / Supabase DB categories to UI display categories
+ */
+export function mapCategoryToUI(cat: string): 'Tech' | 'Cloud' | 'Data' | 'Management' | 'Language' {
+  const lower = (cat || '').toLowerCase();
+  if (lower.includes('cloud') || lower.includes('devops') || lower.includes('infrastructure')) return 'Cloud';
+  if (lower.includes('data') || lower.includes('database') || lower.includes('analytics')) return 'Data';
+  if (lower.includes('soft') || lower.includes('management') || lower.includes('industry') || lower.includes('leadership')) return 'Management';
+  if (lower.includes('language') || lower.includes('lang')) return 'Language';
+  return 'Tech'; // Default for 'technical', 'framework', 'tool', 'tech', etc.
+}
+
+/**
  * Fetch all skills directly from public.skills table
  */
 export async function fetchSkillsFromSupabase(client: SupabaseClient): Promise<SkillItem[]> {
   try {
     const { data: rows, error } = await client
       .from('skills')
-      .select('normalized_skill, skill_name, category, job_id');
+      .select('*');
 
     if (error || !rows || rows.length === 0) {
-      // Fallback query if simple columns exist
-      const { data: altRows } = await client
-        .from('skills')
-        .select('*')
-        .order('demand_count', { ascending: false })
-        .limit(100);
-
-      if (altRows && altRows.length > 0) {
-        return altRows.map(r => ({
-          name: r.name || r.normalized_skill || r.skill_name,
-          category: mapCategoryToUI(r.category),
-          count: r.demand_count || r.count || 1,
-          percentage: Number(r.percentage) || 0,
-          avgSalary: Number(r.avg_salary) || 0,
-          growth: r.growth_rate || `+${Math.min(45, (r.demand_count || 1) * 6)}%`
-        }));
-      }
+      console.warn('[SkillsRepository] public.skills table returned 0 rows or query error:', error?.message);
       return [];
     }
 
-    // Aggregate unique job_ids per normalized_skill
-    const skillMap = new Map<string, { category: string; jobIds: Set<string> }>();
+    console.log(`[SkillsRepository] Successfully fetched ${rows.length} rows directly from public.skills table.`);
+
+    // Aggregate rows by skill name / normalized skill
+    const skillMap = new Map<string, { category: 'Tech' | 'Cloud' | 'Data' | 'Management' | 'Language'; occurrences: number; jobIds: Set<string> }>();
+
     rows.forEach(r => {
-      const skill = r.normalized_skill || r.skill_name;
-      if (!skillMap.has(skill)) {
-        skillMap.set(skill, { category: mapCategoryToUI(r.category), jobIds: new Set() });
+      const rawName = r.normalized_skill || r.skill_name || r.name;
+      if (!rawName) return;
+
+      // Clean up display name
+      const displayName = String(rawName).charAt(0).toUpperCase() + String(rawName).slice(1);
+      const uiCategory = mapCategoryToUI(r.category);
+
+      if (!skillMap.has(displayName)) {
+        skillMap.set(displayName, { category: uiCategory, occurrences: 0, jobIds: new Set() });
       }
+      const entry = skillMap.get(displayName)!;
+      entry.occurrences += Number(r.demand_count || r.count || 1);
       if (r.job_id) {
-        skillMap.get(skill)!.jobIds.add(r.job_id);
+        entry.jobIds.add(r.job_id);
       }
     });
 
     const totalJobsCount = Math.max(1, new Set(rows.map(r => r.job_id).filter(Boolean)).size);
 
-    return Array.from(skillMap.entries()).map(([name, val]) => ({
-      name,
-      category: val.category as any,
-      count: val.jobIds.size || 1,
-      percentage: Number(((val.jobIds.size / totalJobsCount) * 100).toFixed(1)),
-      avgSalary: 0,
-      growth: `+${Math.min(45, Math.max(10, val.jobIds.size * 6))}%`
-    })).sort((a, b) => b.count - a.count);
+    return Array.from(skillMap.entries()).map(([name, val]) => {
+      const effectiveCount = val.jobIds.size > 0 ? val.jobIds.size : val.occurrences;
+      return {
+        name,
+        category: val.category,
+        count: effectiveCount,
+        percentage: Number(((effectiveCount / totalJobsCount) * 100).toFixed(1)),
+        avgSalary: 0,
+        growth: `+${Math.min(45, Math.max(10, effectiveCount * 6))}%`
+      };
+    }).sort((a, b) => b.count - a.count);
 
   } catch (err) {
     console.error('[SkillsRepository] Error fetching public.skills:', err);
     return [];
   }
-}
-
-/**
- * Maps DB categories to UI display categories
- */
-function mapCategoryToUI(cat: string): 'Tech' | 'Cloud' | 'Data' | 'Management' | 'Language' {
-  const lower = (cat || '').toLowerCase();
-  if (lower.includes('cloud') || lower.includes('devops')) return 'Cloud';
-  if (lower.includes('data') || lower.includes('database')) return 'Data';
-  if (lower.includes('soft') || lower.includes('management') || lower.includes('tool')) return 'Management';
-  if (lower.includes('language')) return 'Language';
-  return 'Tech';
 }
 
 /**
@@ -155,8 +153,14 @@ export async function syncAndUpsertSkillsToSupabase(
   client: SupabaseClient,
   jobRecords: { id?: string; title: string; description: string; salary?: string | null }[]
 ): Promise<SkillItem[]> {
+  // First read from public.skills table
+  const existingSkills = await fetchSkillsFromSupabase(client);
+  if (existingSkills.length > 0) {
+    return existingSkills;
+  }
+
   if (!jobRecords || jobRecords.length === 0) {
-    return fetchSkillsFromSupabase(client);
+    return [];
   }
 
   const rowsToInsert: RelationalSkillRow[] = [];
@@ -169,12 +173,11 @@ export async function syncAndUpsertSkillsToSupabase(
       rowsToInsert.push({
         job_id: jobId,
         skill_name: item.name,
-        normalized_skill: item.name,
+        normalized_skill: item.name.toLowerCase(),
         category: item.category,
         confidence: 0.98,
         source: 'AI_NLP_Pipeline',
-        aliases: [item.name.toLowerCase()],
-        metadata: { extracted_at: new Date().toISOString() }
+        aliases: [item.name.toLowerCase()]
       });
     });
   });
