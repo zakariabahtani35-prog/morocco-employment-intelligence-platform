@@ -259,23 +259,25 @@ export function extractCompany(title: string = '', desc: string = '', rawCompNam
 }
 
 const SKILL_RULES: { name: string; category: 'Tech' | 'Cloud' | 'Data' | 'Management' | 'Language'; keywords: string[] }[] = [
-  { name: 'Python', category: 'Tech', keywords: ['python', 'pandas', 'django', 'fastapi'] },
-  { name: 'SQL', category: 'Data', keywords: ['sql', 'postgres', 'postgresql', 'mysql', 'oracle'] },
-  { name: 'React', category: 'Tech', keywords: ['react', 'next.js', 'frontend', 'javascript', 'typescript'] },
+  { name: 'Python', category: 'Tech', keywords: ['python', 'pandas', 'django', 'fastapi', 'numpy'] },
+  { name: 'SQL', category: 'Data', keywords: ['sql', 'postgres', 'postgresql', 'mysql', 'oracle', 'database', 'baza'] },
+  { name: 'React', category: 'Tech', keywords: ['react', 'next.js', 'frontend', 'javascript', 'typescript', 'js', 'ts'] },
   { name: 'TypeScript', category: 'Tech', keywords: ['typescript', 'ts'] },
-  { name: 'Node.js', category: 'Tech', keywords: ['node.js', 'node', 'express'] },
-  { name: 'Docker', category: 'Cloud', keywords: ['docker', 'container'] },
+  { name: 'Node.js', category: 'Tech', keywords: ['node.js', 'node', 'express', 'backend'] },
+  { name: 'QA / Testing', category: 'Tech', keywords: ['qa', 'quality assurance', 'testing', 'testeur', 'automation'] },
+  { name: 'AI / ML', category: 'Tech', keywords: ['ai', 'artificial intelligence', 'machine learning', 'ia', 'deep learning'] },
+  { name: 'Docker', category: 'Cloud', keywords: ['docker', 'container', 'kubernetes', 'k8s'] },
   { name: 'AWS', category: 'Cloud', keywords: ['aws', 'amazon web services', 'cloud'] },
-  { name: 'Power BI', category: 'Data', keywords: ['power bi', 'powerbi', 'tableau', 'analytics'] },
+  { name: 'Power BI', category: 'Data', keywords: ['power bi', 'powerbi', 'tableau', 'analytics', 'bi'] },
   { name: 'Java', category: 'Tech', keywords: ['java', 'spring', 'spring boot'] },
-  { name: 'Odoo', category: 'Management', keywords: ['odoo', 'erp'] },
-  { name: 'Excel', category: 'Management', keywords: ['excel', 'comptabilité', 'gestion'] },
-  { name: 'French', category: 'Language', keywords: ['français', 'french', 'francais'] },
-  { name: 'English', category: 'Language', keywords: ['english', 'anglais', 'bilingual'] },
-  { name: 'Management', category: 'Management', keywords: ['management', 'gestion', 'responsable', 'chef'] },
-  { name: 'Agile/Scrum', category: 'Management', keywords: ['agile', 'scrum', 'kanban'] },
+  { name: 'Odoo', category: 'Management', keywords: ['odoo', 'erp', 'sap'] },
+  { name: 'Excel', category: 'Management', keywords: ['excel', 'comptabilité', 'gestion', 'finance'] },
+  { name: 'French', category: 'Language', keywords: ['français', 'french', 'francais', 'fr'] },
+  { name: 'English', category: 'Language', keywords: ['english', 'anglais', 'bilingual', 'en'] },
+  { name: 'Management', category: 'Management', keywords: ['management', 'gestion', 'responsable', 'chef', 'director', 'lead'] },
+  { name: 'Agile/Scrum', category: 'Management', keywords: ['agile', 'scrum', 'kanban', 'sprint'] },
   { name: 'Git', category: 'Tech', keywords: ['git', 'github', 'gitlab'] },
-  { name: 'Linux', category: 'Cloud', keywords: ['linux', 'bash', 'sysadmin'] },
+  { name: 'Linux', category: 'Cloud', keywords: ['linux', 'bash', 'sysadmin', 'devops'] },
   { name: 'PHP', category: 'Tech', keywords: ['php', 'laravel', 'symfony'] }
 ];
 
@@ -289,10 +291,7 @@ export function extractSkillsForRecord(title: string = '', desc: string = ''): s
     }
   }
 
-  if (matched.length === 0) {
-    matched.push('Management', 'French');
-  }
-
+  // Return strictly parsed skills from text (zero hardcoded fake defaults)
   return Array.from(new Set(matched));
 }
 
