@@ -1,8 +1,26 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+// Safe WebSocket Polyfill for Node.js / CI test environments without native WebSocket
+if (typeof globalThis.WebSocket === 'undefined') {
+  class DummyWebSocket {
+    static CONNECTING = 0;
+    static OPEN = 1;
+    static CLOSING = 2;
+    static CLOSED = 3;
+    readyState = 3;
+    constructor() {}
+    addEventListener() {}
+    removeEventListener() {}
+    send() {}
+    close() {}
+  }
+  (globalThis as any).WebSocket = DummyWebSocket;
+}
+
 // Supabase Configuration loaded strictly from environment variables
-export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
-export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const metaEnv = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env : (typeof process !== 'undefined' && process.env ? process.env : {});
+export const SUPABASE_URL = (metaEnv.VITE_SUPABASE_URL as string) || '';
+export const SUPABASE_ANON_KEY = (metaEnv.VITE_SUPABASE_ANON_KEY as string) || '';
 
 export const isSupabaseConfigured = (url: string = SUPABASE_URL, key: string = SUPABASE_ANON_KEY) => {
   return (
@@ -28,3 +46,4 @@ export function updateSupabaseInstance(url: string, key: string): SupabaseClient
   supabase = getSupabaseClient(url, key);
   return supabase;
 }
+

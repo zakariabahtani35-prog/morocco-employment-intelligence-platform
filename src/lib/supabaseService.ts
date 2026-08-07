@@ -60,6 +60,26 @@ export interface ExperienceSalaryItem {
   growth: string;
 }
 
+export interface ScraperStateItem {
+  source: string;
+  current_page: number;
+  max_pages: number;
+  status: string;
+  total_jobs_scraped: number;
+  last_html_hash?: string;
+  failed_pages?: any[];
+  updated_at?: string;
+}
+
+export interface DeadLetterItem {
+  id: number;
+  source: string;
+  page_number: number;
+  error_message?: string;
+  raw_response?: string;
+  created_at?: string;
+}
+
 export interface DashboardLiveData {
   isLive: boolean;
   loading: boolean;
@@ -91,6 +111,9 @@ export interface DashboardLiveData {
   citiesData: CityMetricItem[];
   experienceSalaryData: ExperienceSalaryItem[];
   pipelineLogs: PipelineLogItem[];
+  scraperState: ScraperStateItem[];
+  deadLetterLogs: DeadLetterItem[];
+  deadLetterQueueCount: number;
   sparklines: Record<string, { v: number }[]>;
 
   // Pagination metadata
@@ -137,8 +160,7 @@ function formatShortDate(d: Date): string {
 
 /**
  * Fetch 100% Dynamic Data directly from Supabase.
- * First tries RPC `get_dashboard_kpis()`; then queries tables `jobs`, `companies`, `locations`, `pipeline_logs`.
- * Pure zero-mock architecture: returns real zeros / nulls if empty.
+ * Queries all 7 schema tables: jobs, raw_jobs, companies, locations, pipeline_logs, scraper_state, dead_letter_queue.
  */
 export async function fetchSupabaseDashboardData(
   filters: DashboardFilterOptions = {},
@@ -181,11 +203,11 @@ export async function fetchSupabaseDashboardData(
           : null;
       }
     } catch {
-      // RPC function might not be installed yet on this Supabase project; fallback to table queries
+      // RPC function optional
     }
 
     // =========================================================================
-    // STEP 2: Query `jobs` table with applied filters
+    // STEP 2: Query `jobs` table count with applied filters
     // =========================================================================
     let jobsFilteredCountQuery = client.from('jobs').select('*', { count: 'exact', head: true });
     
@@ -208,14 +230,14 @@ export async function fetchSupabaseDashboardData(
     const { count: filteredCount } = await jobsFilteredCountQuery;
     totalFilteredJobs = filteredCount ?? 0;
 
-    // If RPC wasn't available, count total unfiltered jobs
+    // Unfiltered total active jobs
     if (!rpcSucceeded) {
       const { count: totalCount } = await client
         .from('jobs')
         .select('*', { count: 'exact', head: true });
       totalActiveJobs = totalCount ?? totalFilteredJobs ?? 0;
 
-      // 2. New Jobs Today (created in last 24h or created_at >= start of today)
+      // New Jobs Today
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
       const todayIso = todayStart.toISOString();
@@ -239,7 +261,7 @@ export async function fetchSupabaseDashboardData(
     remoteHybridCount = remoteCount ?? 0;
 
     // =========================================================================
-    // STEP 4: Query Hiring Companies Count
+    // STEP 4: Query Companies & Locations Tables
     // =========================================================================
     if (!rpcSucceeded || hiringCompaniesCount === 0) {
       const { count: compCount } = await client
@@ -248,9 +270,6 @@ export async function fetchSupabaseDashboardData(
       hiringCompaniesCount = compCount ?? 0;
     }
 
-    // =========================================================================
-    // STEP 5: Query Locations / Cities Count
-    // =========================================================================
     if (!rpcSucceeded || citiesCoveredCount === 0) {
       const { data: locs } = await client
         .from('locations')
@@ -262,7 +281,7 @@ export async function fetchSupabaseDashboardData(
     }
 
     // =========================================================================
-    // STEP 6: Pipeline Logs & Success Rate
+    // STEP 5: Pipeline Logs, Scraper State & DLQ Queries
     // =========================================================================
     const { data: pipelineLogsData } = await client
       .from('pipeline_logs')
@@ -275,35 +294,61 @@ export async function fetchSupabaseDashboardData(
     if (pipelineLogs.length > 0) {
       const successLogs = pipelineLogs.filter(l => String(l.status).toUpperCase() === 'SUCCESS').length;
       pipelineSuccessRate = parseFloat(((successLogs / pipelineLogs.length) * 100).toFixed(1));
-      
       const qualityScore = Math.min(100, Math.max(0, 90 + (pipelineSuccessRate * 0.1)));
       dataQualityScore = parseFloat(qualityScore.toFixed(1));
-    } else if (pipelineSuccessRate === null) {
-      // 0 logs in table
-      pipelineSuccessRate = null;
-      dataQualityScore = null;
     }
 
-    // =========================================================================
-    // STEP 7: Fetch Recent Jobs Records for Dynamic Aggregations
-    // =========================================================================
-    let jobsQuery = client
-      .from('jobs')
-      .select('id, title, company, location, sector, industry, salary, experience, contract_type, work_type, created_at, publication_date')
+    // Scraper State query
+    const { data: scraperStateData } = await client
+      .from('scraper_state')
+      .select('*');
+    const scraperState: ScraperStateItem[] = scraperStateData || [];
+
+    // Dead Letter Queue query
+    const { data: dlqData, count: dlqCount } = await client
+      .from('dead_letter_queue')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
-      .limit(1500);
+      .limit(50);
+    const deadLetterLogs: DeadLetterItem[] = dlqData || [];
+    const deadLetterQueueCount = dlqCount ?? deadLetterLogs.length;
 
-    if (filters.city && filters.city !== 'All') {
-      jobsQuery = jobsQuery.ilike('location', `%${filters.city}%`);
-    }
-    if (filters.industry && filters.industry !== 'All') {
-      jobsQuery = jobsQuery.or(`sector.ilike.%${filters.industry}%,industry.ilike.%${filters.industry}%`);
-    }
-    if (filters.company && filters.company !== 'All') {
-      jobsQuery = jobsQuery.ilike('company', `%${filters.company}%`);
-    }
+    // =========================================================================
+    // STEP 6: Query Jobs with joined foreign keys (companies, locations, raw_jobs)
+    // =========================================================================
+    let jobsRows: any[] = [];
+    try {
+      const { data: joinedData, error: joinErr } = await client
+        .from('jobs')
+        .select(`
+          id, title, description, salary, contract_type, sector, experience, publication_date, is_processed, created_at,
+          company_id, location_id, raw_job_id,
+          companies ( name ),
+          locations ( city, country ),
+          raw_jobs ( company_name, location_name, salary, title, sector, experience )
+        `)
+        .order('created_at', { ascending: false })
+        .limit(1500);
 
-    const { data: jobsRows } = await jobsQuery;
+      if (!joinErr && joinedData) {
+        jobsRows = joinedData;
+      } else {
+        // Fallback to flat select if joins aren't set up in RLS/schema
+        const { data: flatData } = await client
+          .from('jobs')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(1500);
+        jobsRows = flatData || [];
+      }
+    } catch {
+      const { data: flatData } = await client
+        .from('jobs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(1500);
+      jobsRows = flatData || [];
+    }
 
     // Build Dynamic Aggregations from real rows
     const industryMap: Record<string, { count: number; totalSalary: number; salaryCount: number }> = {};
@@ -320,7 +365,6 @@ export async function fetchSupabaseDashboardData(
     let overallSalarySum = 0;
     let overallSalaryCount = 0;
 
-    // Initialize the last 14 days keys with 0 for timeline continuity
     for (let i = 13; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
@@ -329,18 +373,19 @@ export async function fetchSupabaseDashboardData(
     }
 
     if (jobsRows && jobsRows.length > 0) {
-      // If cities covered wasn't calculated yet, count distinct locations from actual jobs
       const distinctJobCities = new Set<string>();
 
       jobsRows.forEach(j => {
-        const sector = j.sector || j.industry || 'General';
+        const compName = j.companies?.name || j.raw_jobs?.company_name || j.company_name || j.company || 'Enterprise';
+        const cityName = j.locations?.city || j.raw_jobs?.location_name || j.location_name || j.location || 'Casablanca';
+        const sector = j.sector || j.raw_jobs?.sector || j.industry || 'General';
+
         if (!industryMap[sector]) {
           industryMap[sector] = { count: 0, totalSalary: 0, salaryCount: 0 };
         }
         industryMap[sector].count += 1;
 
-        // Parse real salary
-        const parsedSal = extractSalaryNumber(j.salary);
+        const parsedSal = extractSalaryNumber(j.salary || j.raw_jobs?.salary);
         if (parsedSal !== null) {
           industryMap[sector].totalSalary += parsedSal;
           industryMap[sector].salaryCount += 1;
@@ -348,31 +393,28 @@ export async function fetchSupabaseDashboardData(
           overallSalaryCount += 1;
         }
 
-        // Map Company
-        if (j.company) {
-          if (!companyJobCountMap[j.company]) {
-            companyJobCountMap[j.company] = { count: 0, salaries: [], sector };
+        if (compName) {
+          if (!companyJobCountMap[compName]) {
+            companyJobCountMap[compName] = { count: 0, salaries: [], sector };
           }
-          companyJobCountMap[j.company].count += 1;
+          companyJobCountMap[compName].count += 1;
           if (parsedSal !== null) {
-            companyJobCountMap[j.company].salaries.push(parsedSal);
+            companyJobCountMap[compName].salaries.push(parsedSal);
           }
         }
 
-        // Map City / Location
-        if (j.location) {
-          distinctJobCities.add(j.location.trim());
-          if (!cityJobCountMap[j.location]) {
-            cityJobCountMap[j.location] = { count: 0, salaries: [] };
+        if (cityName) {
+          distinctJobCities.add(cityName.trim());
+          if (!cityJobCountMap[cityName]) {
+            cityJobCountMap[cityName] = { count: 0, salaries: [] };
           }
-          cityJobCountMap[j.location].count += 1;
+          cityJobCountMap[cityName].count += 1;
           if (parsedSal !== null) {
-            cityJobCountMap[j.location].salaries.push(parsedSal);
+            cityJobCountMap[cityName].salaries.push(parsedSal);
           }
         }
 
-        // Map Experience Level
-        const expStr = String(j.experience || '').toLowerCase();
+        const expStr = String(j.experience || j.raw_jobs?.experience || '').toLowerCase();
         let expKey = 'Mid Level (3-5 Yrs)';
         if (expStr.includes('junior') || expStr.includes('0-2') || expStr.includes('debutant') || expStr.includes('entry') || expStr.includes('bac')) {
           expKey = 'Entry Level (0-2 Yrs)';
@@ -388,7 +430,6 @@ export async function fetchSupabaseDashboardData(
           experienceMap[expKey].salaryCount += 1;
         }
 
-        // Map Daily Trend from created_at or publication_date
         const rawDate = j.created_at || j.publication_date;
         if (rawDate) {
           const dateObj = new Date(rawDate);
@@ -408,12 +449,10 @@ export async function fetchSupabaseDashboardData(
       }
     }
 
-    // Set overall real average salary
     if (overallSalaryCount > 0 && !rpcSucceeded) {
       avgSalaryMAD = Math.round(overallSalarySum / overallSalaryCount);
     }
 
-    // Build Industry Aggregation List
     const jobsByIndustry: IndustryAggregation[] = Object.entries(industryMap)
       .map(([industry, val]) => ({
         industry,
@@ -424,7 +463,6 @@ export async function fetchSupabaseDashboardData(
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
 
-    // Build Daily Recruitment Trends List
     const dailyRecruitmentTrends: DailyTrendItem[] = Object.entries(dailyJobsMap)
       .map(([date, count]) => ({
         date,
@@ -433,11 +471,10 @@ export async function fetchSupabaseDashboardData(
         Growth: count > 0 ? parseFloat(((count / Math.max(1, totalActiveJobs)) * 100).toFixed(1)) : 0
       }));
 
-    // Build Top Hiring Companies List from Database
     const { data: companiesTableRows, count: totalCompaniesFound } = await client
       .from('companies')
       .select('name, category, industry, open_jobs_count', { count: 'exact' })
-      .order('open_jobs_count', { ascending: false, nullsFirst: false })
+      .order('name', { ascending: true })
       .range(from, to);
 
     let topCompanies: CompanyListingItem[] = [];
@@ -461,7 +498,6 @@ export async function fetchSupabaseDashboardData(
         };
       });
     } else if (Object.keys(companyJobCountMap).length > 0) {
-      // Fallback to distinct companies found inside `jobs` table
       topCompanies = Object.entries(companyJobCountMap)
         .map(([compName, val]) => {
           const avgSal = val.salaries.length > 0
@@ -482,7 +518,6 @@ export async function fetchSupabaseDashboardData(
         .slice(from, to + 1);
     }
 
-    // Build Regional Cities Analytics
     const citiesData: CityMetricItem[] = Object.entries(cityJobCountMap)
       .map(([cityName, val]) => {
         const shareNum = totalActiveJobs > 0 ? (val.count / totalActiveJobs) * 100 : 0;
@@ -501,7 +536,6 @@ export async function fetchSupabaseDashboardData(
       })
       .sort((a, b) => b.jobs - a.jobs);
 
-    // Build Experience Salary Breakdown
     const experienceSalaryData: ExperienceSalaryItem[] = Object.entries(experienceMap).map(([level, val]) => ({
       level,
       avgSalaryMAD: val.salaryCount > 0 ? Math.round(val.totalSalary / val.salaryCount) : 0,
@@ -509,7 +543,6 @@ export async function fetchSupabaseDashboardData(
       growth: val.count > 0 ? `+${Math.round((val.count / Math.max(1, totalActiveJobs)) * 100)}%` : '0%'
     }));
 
-    // Sparklines from real daily trend data
     const dailyCounts = dailyRecruitmentTrends.map(d => ({ v: d.Jobs }));
     const sparklines: Record<string, { v: number }[]> = {
       'total-jobs': dailyCounts.length > 0 ? dailyCounts : [{ v: 0 }, { v: totalActiveJobs }],
@@ -522,7 +555,6 @@ export async function fetchSupabaseDashboardData(
       'pipeline-success': [{ v: 0 }, { v: pipelineSuccessRate || 0 }]
     };
 
-    // Raw jobs count
     const { count: rawJobsCount } = await client
       .from('raw_jobs')
       .select('*', { count: 'exact', head: true });
@@ -558,6 +590,9 @@ export async function fetchSupabaseDashboardData(
       citiesData,
       experienceSalaryData,
       pipelineLogs,
+      scraperState,
+      deadLetterLogs,
+      deadLetterQueueCount,
       sparklines,
 
       pagination: {
@@ -596,9 +631,13 @@ export async function fetchSupabaseDashboardData(
       citiesData: [],
       experienceSalaryData: [],
       pipelineLogs: [],
+      scraperState: [],
+      deadLetterLogs: [],
+      deadLetterQueueCount: 0,
       sparklines: {},
       pagination: { page: 1, pageSize: 10, totalRows: 0, totalPages: 1 },
       rawJobsCount: 0
     };
   }
 }
+

@@ -504,6 +504,8 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
             isLoading={isLoadingSupabase}
             isDarkMode={isDarkMode}
             pipelineLogs={liveData?.pipelineLogs}
+            scraperState={liveData?.scraperState}
+            deadLetterLogs={liveData?.deadLetterLogs}
           />
 
           {/* SECTION 8: AI EXECUTIVE INSIGHTS */}
