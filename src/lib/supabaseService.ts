@@ -521,7 +521,7 @@ export async function fetchSupabaseDashboardData(
         category: val.category,
         count: val.count,
         percentage: Math.min(100, Math.round((val.count / Math.max(1, filteredRecords.length)) * 100)),
-        avgSalary: val.salCount > 0 ? Math.round(val.totalSal / val.salCount) : (avgSalaryMAD || 14500),
+        avgSalary: val.salCount > 0 ? Math.round(val.totalSal / val.salCount) : (avgSalaryMAD || 0),
         growth: `+${Math.min(45, Math.max(12, val.count * 8))}%`
       }))
       .sort((a, b) => b.count - a.count);
