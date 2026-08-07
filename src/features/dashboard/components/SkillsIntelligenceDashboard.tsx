@@ -12,10 +12,45 @@ interface SkillsIntelligenceDashboardProps {
 
 const CATEGORY_COLORS: Record<string, string> = {
   Tech: '#E6004D',
+  technical: '#E6004D',
+  framework: '#E6004D',
+  tool: '#E6004D',
   Cloud: '#2563EB',
+  cloud: '#2563EB',
+  cloud_platforms: '#2563EB',
   Data: '#8B5CF6',
+  data: '#8B5CF6',
+  database: '#8B5CF6',
   Management: '#10B981',
-  Language: '#F59E0B'
+  management: '#10B981',
+  soft: '#10B981',
+  Language: '#F59E0B',
+  language: '#F59E0B'
+};
+
+const isCategoryMatch = (skillCategory: string, selectedTab: string): boolean => {
+  if (!selectedTab || selectedTab.toUpperCase() === 'ALL') return true;
+
+  const catLower = (skillCategory || '').toLowerCase();
+  const tabLower = selectedTab.toLowerCase();
+
+  if (tabLower === 'tech') {
+    return ['tech', 'technical', 'framework', 'tool'].some(c => catLower.includes(c));
+  }
+  if (tabLower === 'cloud') {
+    return ['cloud', 'cloud_platforms', 'devops', 'infrastructure'].some(c => catLower.includes(c));
+  }
+  if (tabLower === 'data') {
+    return ['data', 'database', 'analytics'].some(c => catLower.includes(c));
+  }
+  if (tabLower === 'management') {
+    return ['management', 'soft', 'leadership', 'agile'].some(c => catLower.includes(c));
+  }
+  if (tabLower === 'language') {
+    return ['language', 'lang'].some(c => catLower.includes(c));
+  }
+
+  return catLower.includes(tabLower);
 };
 
 export const SkillsIntelligenceDashboard: React.FC<SkillsIntelligenceDashboardProps> = ({
@@ -27,8 +62,7 @@ export const SkillsIntelligenceDashboard: React.FC<SkillsIntelligenceDashboardPr
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const filteredSkills = React.useMemo(() => {
-    if (selectedCategory === 'All') return skillsList;
-    return skillsList.filter(s => s.category === selectedCategory);
+    return skillsList.filter(s => isCategoryMatch(s.category, selectedCategory));
   }, [skillsList, selectedCategory]);
 
   return (
