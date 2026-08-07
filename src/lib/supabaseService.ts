@@ -183,10 +183,11 @@ export async function fetchSupabaseDashboardData(
   let pipelineSuccessRate: number | null = null;
   let dataQualityScore: number | null = null;
   let totalFilteredJobs = 0;
+  let rlsNoticeRequired = false;
 
   try {
     // =========================================================================
-    // STEP 1: Attempt to call the Supabase RPC Function `get_dashboard_kpis`
+    // STEP 1: Query `dashboard_kpis` view or RPC `get_dashboard_kpis`
     // =========================================================================
     let rpcSucceeded = false;
     try {
@@ -203,41 +204,73 @@ export async function fetchSupabaseDashboardData(
           : null;
       }
     } catch {
-      // RPC function optional
+      // RPC optional
+    }
+
+    if (!rpcSucceeded) {
+      try {
+        const { data: kpiViewRows } = await client.from('dashboard_kpis').select('*');
+        if (kpiViewRows && kpiViewRows.length > 0) {
+          const kpiRow = kpiViewRows[0];
+          rpcSucceeded = true;
+          totalActiveJobs = Number(kpiRow.total_active_jobs || 0);
+          newJobsToday = Number(kpiRow.new_jobs_today || 0);
+          hiringCompaniesCount = Number(kpiRow.hiring_companies || 0);
+          citiesCoveredCount = Number(kpiRow.cities_covered || 0);
+        }
+      } catch {
+        // View optional
+      }
     }
 
     // =========================================================================
-    // STEP 2: Query `jobs` table count with applied filters
+    // STEP 2: Query `jobs_by_industry` view for Sector Distribution
+    // =========================================================================
+    let viewIndustries: IndustryAggregation[] = [];
+    try {
+      const { data: indViewRows } = await client.from('jobs_by_industry').select('*');
+      if (indViewRows && indViewRows.length > 0) {
+        viewIndustries = indViewRows.map((r: any) => ({
+          industry: String(r.sector || r.industry || 'General'),
+          count: Number(r.total_jobs || r.count || 0),
+          salaryMAD: 0,
+          growth: `+${Math.round((Number(r.total_jobs || 0) / Math.max(1, totalActiveJobs)) * 100)}%`
+        })).sort((a, b) => b.count - a.count);
+      }
+    } catch {
+      // View optional
+    }
+
+    // =========================================================================
+    // STEP 3: Query `jobs` table with applied filters
     // =========================================================================
     let jobsFilteredCountQuery = client.from('jobs').select('*', { count: 'exact', head: true });
     
     if (filters.city && filters.city !== 'All') {
-      jobsFilteredCountQuery = jobsFilteredCountQuery.ilike('location', `%${filters.city}%`);
+      jobsFilteredCountQuery = jobsFilteredCountQuery.or(`title.ilike.%${filters.city}%,description.ilike.%${filters.city}%`);
     }
     if (filters.industry && filters.industry !== 'All') {
-      jobsFilteredCountQuery = jobsFilteredCountQuery.or(`sector.ilike.%${filters.industry}%,industry.ilike.%${filters.industry}%`);
+      jobsFilteredCountQuery = jobsFilteredCountQuery.ilike('sector', `%${filters.industry}%`);
     }
     if (filters.company && filters.company !== 'All') {
-      jobsFilteredCountQuery = jobsFilteredCountQuery.ilike('company', `%${filters.company}%`);
+      jobsFilteredCountQuery = jobsFilteredCountQuery.or(`title.ilike.%${filters.company}%,description.ilike.%${filters.company}%`);
     }
     if (filters.experience && filters.experience !== 'All') {
       jobsFilteredCountQuery = jobsFilteredCountQuery.ilike('experience', `%${filters.experience}%`);
     }
     if (filters.contract && filters.contract !== 'All') {
-      jobsFilteredCountQuery = jobsFilteredCountQuery.or(`contract_type.ilike.%${filters.contract}%,work_type.ilike.%${filters.contract}%`);
+      jobsFilteredCountQuery = jobsFilteredCountQuery.ilike('contract_type', `%${filters.contract}%`);
     }
 
     const { count: filteredCount } = await jobsFilteredCountQuery;
     totalFilteredJobs = filteredCount ?? 0;
 
-    // Unfiltered total active jobs
     if (!rpcSucceeded) {
       const { count: totalCount } = await client
         .from('jobs')
         .select('*', { count: 'exact', head: true });
       totalActiveJobs = totalCount ?? totalFilteredJobs ?? 0;
 
-      // New Jobs Today
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
       const todayIso = todayStart.toISOString();
@@ -251,17 +284,17 @@ export async function fetchSupabaseDashboardData(
     }
 
     // =========================================================================
-    // STEP 3: Remote / Hybrid Jobs Query
+    // STEP 4: Remote / Hybrid Jobs Query
     // =========================================================================
     const { count: remoteCount } = await client
       .from('jobs')
       .select('*', { count: 'exact', head: true })
-      .or('work_type.ilike.%remote%,work_type.ilike.%hybrid%,contract_type.ilike.%remote%,contract_type.ilike.%hybrid%,description.ilike.%télétravail%');
+      .or('contract_type.ilike.%remote%,contract_type.ilike.%hybrid%,description.ilike.%télétravail%,title.ilike.%télétravail%');
 
     remoteHybridCount = remoteCount ?? 0;
 
     // =========================================================================
-    // STEP 4: Query Companies & Locations Tables
+    // STEP 5: Companies & Locations Table Queries
     // =========================================================================
     if (!rpcSucceeded || hiringCompaniesCount === 0) {
       const { count: compCount } = await client
@@ -281,7 +314,7 @@ export async function fetchSupabaseDashboardData(
     }
 
     // =========================================================================
-    // STEP 5: Pipeline Logs, Scraper State & DLQ Queries
+    // STEP 6: Pipeline Logs, Scraper State & DLQ Queries
     // =========================================================================
     const { data: pipelineLogsData } = await client
       .from('pipeline_logs')
@@ -298,13 +331,11 @@ export async function fetchSupabaseDashboardData(
       dataQualityScore = parseFloat(qualityScore.toFixed(1));
     }
 
-    // Scraper State query
     const { data: scraperStateData } = await client
       .from('scraper_state')
       .select('*');
     const scraperState: ScraperStateItem[] = scraperStateData || [];
 
-    // Dead Letter Queue query
     const { data: dlqData, count: dlqCount } = await client
       .from('dead_letter_queue')
       .select('*', { count: 'exact' })
@@ -314,40 +345,23 @@ export async function fetchSupabaseDashboardData(
     const deadLetterQueueCount = dlqCount ?? deadLetterLogs.length;
 
     // =========================================================================
-    // STEP 6: Query Jobs with joined foreign keys (companies, locations, raw_jobs)
+    // STEP 7: Query Jobs rows with robust fallback & Title/Description Parsing
     // =========================================================================
     let jobsRows: any[] = [];
     try {
-      const { data: joinedData, error: joinErr } = await client
-        .from('jobs')
-        .select(`
-          id, title, description, salary, contract_type, sector, experience, publication_date, is_processed, created_at,
-          company_id, location_id, raw_job_id,
-          companies ( name ),
-          locations ( city, country ),
-          raw_jobs ( company_name, location_name, salary, title, sector, experience )
-        `)
-        .order('created_at', { ascending: false })
-        .limit(1500);
-
-      if (!joinErr && joinedData) {
-        jobsRows = joinedData;
-      } else {
-        // Fallback to flat select if joins aren't set up in RLS/schema
-        const { data: flatData } = await client
-          .from('jobs')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(1500);
-        jobsRows = flatData || [];
-      }
-    } catch {
       const { data: flatData } = await client
         .from('jobs')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(1500);
       jobsRows = flatData || [];
+    } catch {
+      jobsRows = [];
+    }
+
+    // Detect if RLS prevents reading rows directly from jobs table
+    if (totalActiveJobs > 0 && jobsRows.length === 0) {
+      rlsNoticeRequired = true;
     }
 
     // Build Dynamic Aggregations from real rows
@@ -372,20 +386,50 @@ export async function fetchSupabaseDashboardData(
       dailyJobsMap[key] = 0;
     }
 
+    // Known Moroccan Cities & Enterprises Extractor
+    const MOROCCAN_CITIES = ['Casablanca', 'Rabat', 'Tangier', 'Marrakech', 'Agadir', 'Fes', 'Meknes', 'Oujda', 'Kenitra', 'Tetouan', 'El Jadida', 'Nador', 'Nouaceur', 'Taza', 'Oulad teima'];
+
     if (jobsRows && jobsRows.length > 0) {
       const distinctJobCities = new Set<string>();
 
       jobsRows.forEach(j => {
-        const compName = j.companies?.name || j.raw_jobs?.company_name || j.company_name || j.company || 'Enterprise';
-        const cityName = j.locations?.city || j.raw_jobs?.location_name || j.location_name || j.location || 'Casablanca';
-        const sector = j.sector || j.raw_jobs?.sector || j.industry || 'General';
+        let compName = j.company || j.company_name;
+        let cityName = j.location || j.location_name;
+
+        // Parse Title & Description for City if location_id/location is null
+        const fullText = `${j.title || ''} ${j.description || ''}`;
+        if (!cityName) {
+          for (const city of MOROCCAN_CITIES) {
+            if (fullText.toLowerCase().includes(city.toLowerCase())) {
+              cityName = city;
+              break;
+            }
+          }
+          if (!cityName) cityName = 'Casablanca';
+        }
+
+        // Parse Title & Description for Company if company_id/company is null
+        if (!compName) {
+          if (j.title && j.title.includes('|')) {
+            const parts = j.title.split('|');
+            compName = parts[0].trim();
+          } else if (j.description) {
+            const match = j.description.match(/([A-Z0-9\s.]{3,30})\s+(recherche|recrute|embauche)/i);
+            if (match && match[1]) {
+              compName = match[1].trim();
+            }
+          }
+          if (!compName) compName = 'Enterprise Partner';
+        }
+
+        const sector = j.sector || j.industry || 'General';
 
         if (!industryMap[sector]) {
           industryMap[sector] = { count: 0, totalSalary: 0, salaryCount: 0 };
         }
         industryMap[sector].count += 1;
 
-        const parsedSal = extractSalaryNumber(j.salary || j.raw_jobs?.salary);
+        const parsedSal = extractSalaryNumber(j.salary);
         if (parsedSal !== null) {
           industryMap[sector].totalSalary += parsedSal;
           industryMap[sector].salaryCount += 1;
@@ -414,7 +458,7 @@ export async function fetchSupabaseDashboardData(
           }
         }
 
-        const expStr = String(j.experience || j.raw_jobs?.experience || '').toLowerCase();
+        const expStr = String(j.experience || '').toLowerCase();
         let expKey = 'Mid Level (3-5 Yrs)';
         if (expStr.includes('junior') || expStr.includes('0-2') || expStr.includes('debutant') || expStr.includes('entry') || expStr.includes('bac')) {
           expKey = 'Entry Level (0-2 Yrs)';
@@ -453,7 +497,7 @@ export async function fetchSupabaseDashboardData(
       avgSalaryMAD = Math.round(overallSalarySum / overallSalaryCount);
     }
 
-    const jobsByIndustry: IndustryAggregation[] = Object.entries(industryMap)
+    let jobsByIndustry: IndustryAggregation[] = Object.entries(industryMap)
       .map(([industry, val]) => ({
         industry,
         count: val.count,
@@ -462,6 +506,11 @@ export async function fetchSupabaseDashboardData(
       }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
+
+    // Fallback to viewIndustries if jobs table direct query returned 0 sectors due to RLS
+    if (jobsByIndustry.length === 0 && viewIndustries.length > 0) {
+      jobsByIndustry = viewIndustries;
+    }
 
     const dailyRecruitmentTrends: DailyTrendItem[] = Object.entries(dailyJobsMap)
       .map(([date, count]) => ({
@@ -581,7 +630,7 @@ export async function fetchSupabaseDashboardData(
       pipelineSuccessRate,
       
       queryTimeMs: Math.max(queryTimeMs, 12),
-      rlsEnforced: true,
+      rlsEnforced: !rlsNoticeRequired,
       activePortalsCount: Math.max(1, pipelineLogs.length > 0 ? new Set(pipelineLogs.map(l => l.workflow_name)).size : 0),
       
       jobsByIndustry,
