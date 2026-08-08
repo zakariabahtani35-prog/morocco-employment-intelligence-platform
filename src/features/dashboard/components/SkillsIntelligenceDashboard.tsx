@@ -89,12 +89,12 @@ export const SkillsIntelligenceDashboard: React.FC<SkillsIntelligenceDashboardPr
         </div>
 
         {/* Category Filters */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-gray-100 dark:bg-zinc-800/80">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-gray-100 dark:bg-zinc-800/80 overflow-x-auto max-w-full scrollbar-none">
           {['All', 'Tech', 'Cloud', 'Data', 'Management', 'Language'].map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1 rounded-lg text-xs font-mono-code font-bold transition-colors cursor-pointer ${
+              className={`px-3 py-1 rounded-lg text-xs font-mono-code font-bold transition-colors cursor-pointer whitespace-nowrap ${
                 selectedCategory === cat
                   ? 'bg-white dark:bg-zinc-700 text-[#8B5CF6] shadow-2xs'
                   : 'text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200'

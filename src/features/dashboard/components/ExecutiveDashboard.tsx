@@ -43,7 +43,6 @@ import { DashboardFiltersToolbar } from './DashboardFiltersToolbar';
 // New Enterprise Intelligence Modules
 import { MoroccoEmploymentHeatMap } from './MoroccoEmploymentHeatMap';
 import { SkillsIntelligenceDashboard } from './SkillsIntelligenceDashboard';
-import { PredictiveAnalyticsSection } from './PredictiveAnalyticsSection';
 import { CompanyProfileDrawer } from './CompanyProfileDrawer';
 import { JobDetailsDrawer } from './JobDetailsDrawer';
 import { CompanyListingItem, JobRecordItem } from '../../../lib/supabaseService';
@@ -493,13 +492,6 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
             skillsCategoryDistribution={liveData?.skillsCategoryDistribution}
           />
 
-          {/* SECTION 4: PREDICTIVE LABOR MARKET ANALYTICS */}
-          <PredictiveAnalyticsSection
-            isLoading={isLoadingSupabase}
-            isDarkMode={isDarkMode}
-            predictiveForecasts={liveData?.predictiveForecasts}
-            totalActiveJobs={liveData?.totalActiveJobs}
-          />
 
           {/* SECTION 5: DYNAMIC RECRUITMENT TRENDS */}
           <RecruitmentTrendsChart

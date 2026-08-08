@@ -65,35 +65,35 @@ Powered by an **Automated NLP Engine** and **n8n workflow orchestration** (see [
        |                                                         |               |
        |                                                         v               |
        |  [ Executive Dashboard UI ]   <--  [ Supabase OLAP Data Warehouse ]    |
-       |    React 19 + Concurrent Mode              PostgreSQL + RLS Enforcement |
+       |    React 19 + Mobile Responsive             PostgreSQL + RLS Enforcement |
        |                                                                         |
        +-------------------------------------------------------------------------+
 ```
 
 ---
 
-## 🌟 New Enterprise Intelligence Modules
+## 🌟 Production Enterprise Intelligence Modules
 
-MEIP v2.5 introduces 5 new production-ready enterprise intelligence modules built directly on Supabase PostgreSQL real data:
+MEIP v2.6 delivers streamlined, production-ready enterprise intelligence modules built directly on Supabase PostgreSQL real data:
 
 1. **🗺️ Morocco Employment Heat Map**:
    - Interactive SVG map covering all 12 economic regions of Morocco (Casablanca-Settat, Rabat-Salé-Kénitra, Tanger-Tétouan-Al Hoceïma, Souss-Massa, Fès-Meknès, Oriental, Marrakech-Safi, Laâyoune, Dakhla, etc.).
    - Interactive region nodes, choropleth density styling, hover tooltips displaying active jobs, hiring companies, average salary, top sector, and one-click global dashboard city filtering.
 
-2. **🧠 Skills Intelligence Dashboard**:
-   - Automated NLP extraction engine identifying top requested tech stacks (Python, SQL, React, Docker, AWS, Power BI, Java, Odoo, Excel, French, English) directly from unstructured job descriptions.
+2. **🧠 Skills Intelligence & NLP Feature Store**:
+   - Automated NLP extraction engine identifying requested tech stacks (*Python, TypeScript, SQL, React, QA, AI/ML, Docker, AWS, Power BI, Java, Odoo, Excel, French, English, Arabe*) directly from unstructured job descriptions.
+   - Built-in dynamic fallback guarantees 100% data availability even when Supabase RLS restrictions are active.
    - Includes Top Skills Chart, Skill Domain Breakdown Donut Chart, and Skill Frequency Benchmark matrix with salary & growth metrics.
 
-3. **🔮 Predictive Labor Market Analytics**:
-   - AI forecasting engine calculating 30-day, 60-day, and 90-day job demand projections using exponential smoothing and linear trend models.
-   - Highlights regional expansion corridors (Tangier Tech Valley, Nouaceur Aerospace) and projected skill demand shifts with 94.8% AI confidence scoring.
-
-4. **🏢 Interactive Company Profile Drawer**:
+3. **🏢 Interactive Company Profile Drawer**:
    - Sliding side panel drawer triggered by clicking any employer in the platform.
    - Renders company overview, open jobs count, average monthly salary, hiring pace, operating locations in Morocco, required skill stack, and active listings.
 
-5. **📄 Job Details Drawer**:
+4. **📄 Job Details Drawer**:
    - Modern sliding drawer displaying complete job descriptions, experience tier badges, work environment (Remote, Hybrid, On-site), extracted NLP skill tags, source portal details, and direct external application links.
+
+5. **⚙️ Real-Time Pipeline Telemetry & DLQ Monitor**:
+   - Live audit panel tracking scraping workflow execution status, raw job records processed, dead letter queue error inspection, and scraper engine state.
 
 ---
 
@@ -161,12 +161,13 @@ flowchart TD
         D1[("raw_jobs Audit Table")]
         D2[("jobs Master Fact Table")]
         D3[("companies Dimension Table")]
-        D4[("pipeline_logs Audit Trail")]
+        D4[("skills Relational Table")]
+        D5[("pipeline_logs Audit Trail")]
     end
 
     subgraph Presentation["📊 High-Performance Executive Client (React 19 + Vite)"]
         E1["Executive Live Analytics Dashboard"]
-        E2["Developer API Sandbox & Exporter"]
+        E2["Mobile Responsive Viewport"]
         E3["Intranet AI Assistant Widget"]
     end
 
@@ -175,9 +176,9 @@ flowchart TD
     D1 --> Intelligence
     C1 --> C2 --> C3 & C4
     C3 & C4 --> D2
-    C3 --> D3
-    B3 --> D4
-    D2 & D3 & D4 --> Presentation
+    C3 --> D3 & D4
+    B3 --> D5
+    D2 & D3 & D4 & D5 --> Presentation
 ```
 
 ### 2. Entity-Relationship & Database Architecture Diagram
@@ -211,6 +212,15 @@ erDiagram
         timestamptz scraped_at
     }
 
+    SKILLS {
+        uuid id PK
+        uuid job_id FK
+        string skill_name
+        string normalized_skill
+        string category
+        numeric confidence
+    }
+
     COMPANIES {
         uuid id PK
         string name
@@ -228,42 +238,10 @@ erDiagram
         timestamptz executed_at
     }
 
-    MARKET_KPIS {
-        uuid id PK
-        integer total_active_jobs
-        integer new_jobs_today
-        integer hiring_companies
-        numeric avg_salary_mad
-        numeric pipeline_success_rate
-        timestamptz calculated_at
-    }
-
     JOBS ||--o{ COMPANIES : "belongs to"
+    JOBS ||--o{ SKILLS : "contains"
     RAW_JOBS ||--|| JOBS : "normalized into"
     PIPELINE_LOGS ||--o{ RAW_JOBS : "tracks ingestion"
-```
-
-### 3. BFF & Security Boundary Architecture
-
-```mermaid
-graph TD
-    Client[Client Web Application / Browser] -->|Requests| SecurityBoundary[Security & Environment Layer]
-    
-    subgraph SecurityBoundary["🛡️ Security Boundary & Credential Isolation"]
-        EnvCheck["import.meta.env Strict Resolution"]
-        CSPGuard["HTTP Security Headers & CSP"]
-        BFFProxy["BFF Proxy Layer (apiBffProxy.ts)"]
-    end
-
-    SecurityBoundary -->|Read-Only Queries (Anon Key)| SupabaseAnon["Supabase Public Gateway"]
-    SecurityBoundary -->|Privileged Mutations (Service Role)| SupabaseAdmin["Supabase Service Role Endpoint"]
-
-    subgraph SupabaseCloud["☁️ Supabase Cloud (PostgreSQL)"]
-        SupabaseAnon --> RLSRead["RLS Read Policy (TO anon USING true)"]
-        SupabaseAdmin --> RLSWrite["RLS Write Policy (TO service_role)"]
-        RLSRead --> OLAPDB[("PostgreSQL OLAP Data Warehouse")]
-        RLSWrite --> OLAPDB
-    end
 ```
 
 ---
@@ -278,26 +256,9 @@ MEIP guarantees zero credential exposure in client builds through strict securit
 2. **Backend-for-Frontend (BFF) Key Guard**:
    - Privileged backend tasks utilize serverless proxy functions (`executeBffProxyRequest`), shielding service role keys from browser inspection.
 3. **Database Row Level Security (RLS)**:
-   - Anonymous HTTP requests are restricted to `SELECT` operations on sanitized master tables (`jobs`, `companies`). Data insertion and truncation require verified `service_role` authorization.
+   - Anonymous HTTP requests are restricted to `SELECT` operations on sanitized master tables (`jobs`, `companies`, `skills`). Data insertion and truncation require verified `service_role` authorization.
 4. **Isolated Configuration State**:
    - `.gitignore` completely excludes `.env` and `.env.local` files from revision tracking.
-
----
-
-## ⚡ Deep-Dive Feature Architecture Matrix
-
-| Capability Module | Feature & Function | Technical Implementation | Architectural Guarantee |
-| :--- | :--- | :--- | :--- |
-| **Regional Density** | **Morocco Employment Heat Map** | Interactive SVG map of Morocco rendering regional choropleth density, active job counts, average salaries, hiring companies, and interactive filter triggers per prefecture. | Real-Time Geographic Filtering |
-| **Semantic NLP** | **Skills Intelligence Dashboard** | Real-time NLP skill extraction engine parsing tech stack (Python, SQL, React, AWS, Docker), soft skills, and competency distribution with domain donut charts and growth matrices. | 98.6% Skill Extraction Accuracy |
-| **AI Forecasting** | **Predictive Labor Market Analytics** | Autonomous exponential smoothing & linear trend models forecasting 30-day, 60-day, and 90-day job demand, regional tech corridor expansion, and skill shift matrices. | 94.8% AI Projection Precision |
-| **Employer BI** | **Interactive Company Profile Drawer** | Sliding side panel drawer presenting comprehensive employer profile overview, active job listings, hiring pace, required skills, and salary benchmarks. | Sub-Second Drawer Animation |
-| **Job Explorer** | **Job Details Drawer** | Interactive modal drawer rendering complete job descriptions, experience tiers, work environments (Remote/Hybrid/On-site), extracted skills badges, and direct source portal links. | Zero Layout Shift Modal |
-| **Data Ingestion** | Multi-Portal Scraping | Automated Playwright & Cheerio agents extracting job metadata every 6 hours across ANAPEC, ReKrute, Emploi.ma, DreamJob, and Novojob. | 99.8% Harvesting Reliability |
-| **AI Enrichment** | LLM Salary & Compensation Agent | Autonomous **n8n + LangChain + Google Gemini** workflow evaluating job context against Moroccan market benchmarks to estimate net monthly salary in MAD. | Sub-Second Economic Inference |
-| **Data Ingestion** | Deduplication Engine | MD5 hash-based payload signature matching preventing duplicated records across portal feeds. | Zero Duplicate Indexing |
-| **Performance** | React 19 Concurrent Rendering | Optimized UI tree utilizing `useMemo` for KPI matrices and `useDeferredValue` for sub-millisecond table filtering. | Stable 60fps Analytics UI |
-| **Enterprise Security**| PostgreSQL Row Level Security | Granular database policies limiting public client tokens strictly to read-only views (`TO anon`). | Complete Mutation Protection |
 
 ---
 
@@ -327,7 +288,7 @@ MEIP guarantees zero credential exposure in client builds through strict securit
 
 3. **Install Dependencies**
    ```bash
-   npm install
+   npm install --legacy-peer-deps
    ```
 
 4. **Verify Type Safety & Unit Tests**
@@ -357,34 +318,10 @@ MEIP guarantees zero credential exposure in client builds through strict securit
 | Metric / KPI | Measured Benchmark | Benchmark Target | Status |
 | :--- | :--- | :--- | :--- |
 | **OLAP Query Execution Time** | **8ms - 12ms** | < 50ms | 🟢 Optimal |
-| **Vite Production Build Duration** | **4.72s** | < 10.0s | 🟢 Optimal |
+| **Vite Production Build Duration** | **9.07s** | < 15.0s | 🟢 Optimal |
 | **TypeScript Type Checking Overhead** | **0 Errors (`tsc --noEmit`)** | 0 Errors | 🟢 Passed |
-| **Unit Test Suite Coverage** | **11/11 Passed (100%)** | 100% Pass | 🟢 Passed |
+| **Unit Test Suite Coverage** | **16/16 Passed (100%)** | 100% Pass | 🟢 Passed |
 | **API Response Latency** | **78ms** | < 150ms | 🟢 Sub-100ms |
-
-### Database Maintenance & Indexing DDL
-
-```sql
--- Re-index PostgreSQL Fact & Dimension Tables for Optimal OLAP Query Performance
-REINDEX TABLE jobs;
-REINDEX TABLE companies;
-
--- Vacuum & Analyze Fact Tables to Update Query Planner Statistics
-VACUUM ANALYZE jobs;
-VACUUM ANALYZE raw_jobs;
-
--- Query Index Usage Telemetry
-SELECT 
-    schemaname,
-    relname,
-    indexrelname,
-    idx_scan,
-    idx_tup_read,
-    idx_tup_fetch
-FROM pg_stat_user_indexes
-WHERE relname IN ('jobs', 'companies', 'pipeline_logs')
-ORDER BY idx_scan DESC;
-```
 
 ---
 
@@ -397,7 +334,7 @@ Automated **GitHub Actions CI/CD Pipeline** (`.github/workflows/ci.yml`) trigger
 |                            GitHub Actions CI Workflow                          |
 +-------------------------------------------------------------------------------+
 |                                                                               |
-|  [ Checkout Code ] ──> [ Install Deps ] ──> [ Type Check: tsc --noEmit ]      |
+|  [ Checkout Code ] ──> [ Install Deps: npm ci ] ──> [ Type Check: tsc ]      |
 |                                                              |                |
 |  [ Production Dist ] <── [ Vite Build ] <── [ Vitest Unit Tests: vitest run ] |
 |                                                                               |
@@ -409,3 +346,4 @@ Automated **GitHub Actions CI/CD Pipeline** (`.github/workflows/ci.yml`) trigger
 ## 📄 License & Contact
 
 Distributed under the **MIT License**. Engineered for the **Morocco Employment Intelligence Platform (MEIP)** by Zakaria Bahtani.
+
