@@ -81,7 +81,13 @@ BEGIN
 
   RETURN v_result;
 END;
-$$;`;
+$$;
+
+-- Grant public read access to skills table
+ALTER TABLE public.skills ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public read access on skills" ON public.skills;
+CREATE POLICY "Allow public read access on skills" ON public.skills FOR SELECT USING (true);
+`;
 
 interface SupabaseConfigModalProps {
   isOpen: boolean;
