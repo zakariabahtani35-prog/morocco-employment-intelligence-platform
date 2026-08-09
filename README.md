@@ -10,11 +10,11 @@
   <br />
 
   <h4 align="center" style="color: #3B388E; font-weight: 700; font-size: 1.25rem;">
-    Engineering the Future of Moroccan Labor Market Intelligence
+    Engineering the Future of Moroccan Labor Market Intelligence & AI Analytics
   </h4>
 
   <p align="center" style="max-width: 850px; color: #4A5568; font-size: 1.05rem; line-height: 1.6;">
-    <em>An enterprise-grade data platform for the Moroccan employment market — from raw multi-portal web harvesting across <b>ANAPEC, ReKrute, Emploi.ma, DreamJob</b>, and <b>Novojob</b> to Star-Schema warehousing, automated NLP skill extraction feature stores, LLM salary estimation, and executive BI dashboards.</em>
+    <em>An end-to-end national labor market intelligence platform for Morocco — from automated multi-portal web harvesting across <b>ANAPEC, ReKrute, Emploi.ma, DreamJob</b>, and <b>Novojob</b> to Star-Schema warehousing, automated NLP skill extraction feature stores, LLM salary estimation, and real-time executive BI dashboards.</em>
   </p>
   <br />
   <hr style="border: none; border-top: 1px solid #E2E8F0; width: 90%; margin: 15px auto;" />
@@ -25,16 +25,15 @@
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/PYTHON-3.11+-E6004D?style=for-the-badge&logo=python&logoColor=white&labelColor=1A202C" alt="Python 3.11+" /></a>
     <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/POSTGRESQL-15-E6004D?style=for-the-badge&logo=postgresql&logoColor=white&labelColor=1A202C" alt="PostgreSQL 15" /></a>
     <a href="https://react.dev/"><img src="https://img.shields.io/badge/REACT-19.0-E6004D?style=for-the-badge&logo=react&logoColor=white&labelColor=1A202C" alt="React 19" /></a>
-    <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/VITE-REST_SERVICES-E6004D?style=for-the-badge&logo=vite&logoColor=white&labelColor=1A202C" alt="Vite REST" /></a>
+    <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/VITE-6.2.3-E6004D?style=for-the-badge&logo=vite&logoColor=white&labelColor=1A202C" alt="Vite 6.2.3" /></a>
     <br />
-    <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TYPESCRIPT-INTELLIGENCE_DASHBOARD-E6004D?style=for-the-badge&logo=typescript&logoColor=white&labelColor=1A202C" alt="TypeScript" /></a>
+    <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TYPESCRIPT-5.8-E6004D?style=for-the-badge&logo=typescript&logoColor=white&labelColor=1A202C" alt="TypeScript 5.8" /></a>
     <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/DOCKER-CONTAINERIZED-E6004D?style=for-the-badge&logo=docker&logoColor=white&labelColor=1A202C" alt="Docker" /></a>
     <a href="./n8n-workflows/"><img src="https://img.shields.io/badge/n8n-ETL_ORCHESTRATION-E6004D?style=for-the-badge&logo=n8n&logoColor=white&labelColor=1A202C" alt="n8n Workflows" /></a>
     <br />
-    <a href="https://pandas.pydata.org/"><img src="https://img.shields.io/badge/PANDAS-TRANSFORMATION_ENGINE-E6004D?style=for-the-badge&logo=pandas&logoColor=white&labelColor=1A202C" alt="Pandas Engine" /></a>
-    <a href="https://supabase.com/"><img src="https://img.shields.io/badge/SUPABASE-DATA_WAREHOUSE-E6004D?style=for-the-badge&logo=supabase&logoColor=white&labelColor=1A202C" alt="Supabase" /></a>
+    <a href="https://supabase.com/"><img src="https://img.shields.io/badge/SUPABASE-REALTIME_OLAP-E6004D?style=for-the-badge&logo=supabase&logoColor=white&labelColor=1A202C" alt="Supabase Realtime" /></a>
     <a href="https://en.wikipedia.org/wiki/Star_schema"><img src="https://img.shields.io/badge/DATA_WAREHOUSE-STAR_SCHEMA-E6004D?style=for-the-badge&logo=databricks&logoColor=white&labelColor=1A202C" alt="Star Schema" /></a>
-    <a href="./LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-E6004D?style=for-the-badge&logo=open-source-initiative&logoColor=white&labelColor=1A202C" alt="MIT License" /></a>
+    <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/VITEST-16_TESTS_PASSING-E6004D?style=for-the-badge&logo=vitest&logoColor=white&labelColor=1A202C" alt="Vitest Passing" /></a>
   </p>
   <br />
 
@@ -51,21 +50,21 @@
 
 ## 💡 Executive Overview & System Vision
 
-The **Morocco Employment Intelligence Platform (MEIP)** eliminates structural information asymmetry in the North African talent ecosystem. By orchestrating multi-portal web harvesters across leading recruitment sources (**ANAPEC, ReKrute, Emploi.ma, DreamJob, Novojob**), MEIP continuously captures raw recruitment volume.
+The **Morocco Employment Intelligence Platform (MEIP)** eliminates structural information asymmetry in the North African talent ecosystem. By orchestrating multi-portal web harvesters across leading national recruitment sources (**ANAPEC, ReKrute, Emploi.ma, DreamJob, Novojob**), MEIP continuously captures raw recruitment volume.
 
-Powered by an **Automated NLP Engine** and **n8n workflow orchestration** (see [`n8n-workflows/`](./n8n-workflows/)), unstructured job descriptions are dynamically normalized, sanitized, and indexed into an OLAP Star Schema **Supabase PostgreSQL Data Warehouse**. The executive analytics layer delivers real-time salary distributions, ICT skill demand matrices, regional employment density heatmaps, and enterprise hiring benchmarks with sub-second response times.
+Powered by an **Automated NLP Engine** and **n8n workflow orchestration** (see [`n8n-workflows/`](./n8n-workflows/)), unstructured job descriptions are dynamically normalized, sanitized, and indexed into an OLAP Star Schema **Supabase PostgreSQL Data Warehouse**. The executive analytics layer delivers real-time salary distributions, ICT skill demand matrices, regional employment density heatmaps, and enterprise hiring benchmarks with sub-15ms response times.
 
 ```
        +-------------------------------------------------------------------------+
        |             Morocco Employment Intelligence Platform (MEIP)             |
        +-------------------------------------------------------------------------+
        |                                                                         |
-       |  [ Multi-Portal Aggregation ]  -->  [ Automated NLP Engine ]            |
-       |         ANAPEC / ReKrute                 Semantic Parsing & Extraction  |
+       |  [ Multi-Portal Aggregation ]  -->  [ Automated NLP & AI Estimator ]   |
+       |     ANAPEC / ReKrute / Emploi         Gemini LLM + Regex Parsing        |
        |                                                         |               |
        |                                                         v               |
        |  [ Executive Dashboard UI ]   <--  [ Supabase OLAP Data Warehouse ]    |
-       |    React 19 + Mobile Responsive             PostgreSQL + RLS Enforcement |
+       |    React 19 + Framer Motion             PostgreSQL + RLS + PL/pgSQL RPC |
        |                                                                         |
        +-------------------------------------------------------------------------+
 ```
@@ -74,276 +73,143 @@ Powered by an **Automated NLP Engine** and **n8n workflow orchestration** (see [
 
 ## 🌟 Production Enterprise Intelligence Modules
 
-MEIP v2.6 delivers streamlined, production-ready enterprise intelligence modules built directly on Supabase PostgreSQL real data:
+MEIP v2.6 delivers 12 streamlined, production-ready enterprise intelligence modules built directly on Supabase PostgreSQL real data:
 
-1. **🗺️ Morocco Employment Heat Map**:
-   - Interactive SVG map covering all 12 economic regions of Morocco (Casablanca-Settat, Rabat-Salé-Kénitra, Tanger-Tétouan-Al Hoceïma, Souss-Massa, Fès-Meknès, Oriental, Marrakech-Safi, Laâyoune, Dakhla, etc.).
-   - Interactive region nodes, choropleth density styling, hover tooltips displaying active jobs, hiring companies, average salary, top sector, and one-click global dashboard city filtering.
+1. **📊 Executive KPI Cards Section** ([`KpiCardsSection.tsx`](./src/features/dashboard/components/KpiCardsSection.tsx)):
+   - 8 live metrics computed directly from PostgreSQL (`Total Active Jobs`, `New Jobs 24h`, `Hiring Companies`, `Cities Covered`, `Average Monthly Salary MAD`, `Remote & Hybrid Jobs`, `Data Quality Score`, `Pipeline Success Rate`).
+   - Integrated Sparkline trend micro-charts powered by Recharts with status indicator dots.
 
-2. **🧠 Skills Intelligence & NLP Feature Store**:
-   - Automated NLP extraction engine identifying requested tech stacks (*Python, TypeScript, SQL, React, QA, AI/ML, Docker, AWS, Power BI, Java, Odoo, Excel, French, English, Arabe*) directly from unstructured job descriptions.
-   - Built-in dynamic fallback guarantees 100% data availability even when Supabase RLS restrictions are active.
-   - Includes Top Skills Chart, Skill Domain Breakdown Donut Chart, and Skill Frequency Benchmark matrix with salary & growth metrics.
+2. **🗺️ Morocco Employment Heat Map** ([`MoroccoEmploymentHeatMap.tsx`](./src/features/dashboard/components/MoroccoEmploymentHeatMap.tsx)):
+   - Interactive GIS map rendered with MapLibre GL covering all 12 economic regions of Morocco.
+   - Dynamic marker density scaling, hover tooltips displaying job count, hiring companies, average salary MAD, and one-click global city filtering.
 
-3. **🏢 Interactive Company Profile Drawer**:
-   - Sliding side panel drawer triggered by clicking any employer in the platform.
-   - Renders company overview, open jobs count, average monthly salary, hiring pace, operating locations in Morocco, required skill stack, and active listings.
+3. **🧠 Skills Intelligence & Feature Store** ([`SkillsIntelligenceDashboard.tsx`](./src/features/dashboard/components/SkillsIntelligenceDashboard.tsx)):
+   - Automated NLP extraction engine identifying requested tech stacks (*Python, TypeScript, SQL, React, QA, AI/ML, Docker, AWS, Power BI, Java, Odoo, Excel, French, English*) directly from job descriptions.
+   - Dynamic domain breakdown donut chart and skill frequency benchmark matrix with salary & growth metrics.
 
-4. **📄 Job Details Drawer**:
-   - Modern sliding drawer displaying complete job descriptions, experience tier badges, work environment (Remote, Hybrid, On-site), extracted NLP skill tags, source portal details, and direct external application links.
+4. **🔮 Predictive AI Labor Market Analytics** ([`PredictiveAnalyticsSection.tsx`](./src/features/dashboard/components/PredictiveAnalyticsSection.tsx)):
+   - Exponential smoothing & linear regression forecasts projecting 30/60/90-day hiring volume.
+   - Identifies leading regional expansion corridors (Tangier Tech Valley +38%, Nouaceur Aerospace Hub +29%) and skill demand shifts for Q3/Q4 2026.
 
-5. **⚙️ Real-Time Pipeline Telemetry & DLQ Monitor**:
-   - Live audit panel tracking scraping workflow execution status, raw job records processed, dead letter queue error inspection, and scraper engine state.
+5. **📈 Recruitment Trends Timeline** ([`RecruitmentTrendsChart.tsx`](./src/features/dashboard/components/RecruitmentTrendsChart.tsx)):
+   - Smooth Area Chart visualizing daily job posting momentum and applicant activity over time with linear gradients.
 
----
+6. **🏬 Jobs by Industry Sector** ([`JobsByIndustryChart.tsx`](./src/features/dashboard/components/JobsByIndustryChart.tsx)):
+   - Horizontal Bar Chart ordering highest-demand economic sectors (IT & Software, Digital Services, Finance, Engineering, Telecommunications, BPO).
 
-## 📸 Interactive System UI & Feature Visual Gallery
+7. **💰 Average Salary by Experience** ([`SalaryByExperienceChart.tsx`](./src/features/dashboard/components/SalaryByExperienceChart.tsx)):
+   - Grouped Bar Chart comparing monthly salary averages (MAD) against open vacancy counts for Junior, Mid-Level, Senior, and Lead experience tiers.
 
-Explore the primary production modules, interface components, and live telemetry screens of the platform:
+8. **🏢 Top Hiring Employers Table** ([`TopEmployersTable.tsx`](./src/features/dashboard/components/TopEmployersTable.tsx)):
+   - Interactive table ranking top employers in Morocco with direct search filtering, hiring rate metrics, average salary, and interactive profile drawers.
 
-<div align="center">
-  <br />
-  
-  <!-- 1. Hero Landing Showcase -->
-  <h4 align="left" style="color: #3B388E;">1. 🌐 National Employment Intelligence Hero & Landing Module</h4>
-  <img src="./docs/screenshots/hero-section.png" alt="MEIP Hero Landing Module" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 1: High-impact hero landing module highlighting automated extraction across ANAPEC, ReKrute, Emploi.ma, DreamJob, and Novojob.</em></p>
-  <br />
+9. **🌍 Regional Employment Footprint** ([`RegionalFootprintMap.tsx`](./src/features/dashboard/components/RegionalFootprintMap.tsx)):
+   - Region-by-region market share grid highlighting Casablanca-Settat (43.5%), Rabat-Salé-Kénitra (21.2%), and Tanger-Tétouan-Al Hoceïma (11.8%).
 
-  <!-- 2. Architecture & Pipeline Showcase -->
-  <h4 align="left" style="color: #3B388E;">2. ⚙️ Core Architecture & Interactive Feature Pipeline</h4>
-  <img src="./docs/screenshots/architecture-features.png" alt="MEIP Core Architecture & Features" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 2: Interactive 3-tier pipeline explorer detailing automatic multi-source collection, Supabase PostgreSQL Star Schema OLAP, and AI decision support.</em></p>
-  <br />
+10. **⚙️ Pipeline Telemetry & DLQ Monitor** ([`PipelineLogsMonitor.tsx`](./src/features/dashboard/components/PipelineLogsMonitor.tsx)):
+    - Live audit panel tracking scraping workflow execution status, raw job records processed, dead letter queue error inspection, and scraper engine state.
 
-  <!-- 3. Dashboard Preview Showcase -->
-  <h4 align="left" style="color: #3B388E;">3. 📊 Live Market Intelligence & Decision Support Dashboard</h4>
-  <img src="./docs/screenshots/dashboard-preview.png" alt="MEIP Live Market Intelligence Dashboard" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 3: Interactive decision support preview for exploring live recruitment KPIs, regional job density maps, requested technologies, and salary benchmarks.</em></p>
-  <br />
+11. **🤖 AI Executive Insights** ([`AiInsightsSection.tsx`](./src/features/dashboard/components/AiInsightsSection.tsx)):
+    - Dynamic executive summary generated from live database aggregates providing high-level socioeconomic commentary for decision makers.
 
-  <!-- 4. FAQ & Footer Showcase -->
-  <h4 align="left" style="color: #3B388E;">4. ❓ Technical FAQ Accordion & Live Countdown Telemetry</h4>
-  <img src="./docs/screenshots/faq-footer.png" alt="MEIP FAQ Accordion & Live Footer" width="100%" style="border-radius: 12px; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08);" />
-  <p align="left"><em>Figure 4: Comprehensive technical FAQ accordion and live defense countdown timer with direct author contact integration.</em></p>
-  <br />
-</div>
+12. **💬 Intranet AI Assistant** ([`IntranetChatbot.tsx`](./src/components/IntranetChatbot.tsx)):
+    - Floating AI chatbot widget connecting directly to internal n8n webhooks or querying the local labor market knowledge base in real-time.
 
 ---
 
-## 🏗️ Visual System Architecture & Flow Diagrams
+## 🗄️ Supabase PostgreSQL Star-Schema Architecture
 
-### 1. End-to-End Automated ELT Data Pipeline Architecture
+MEIP operates on a high-performance **PostgreSQL 15 OLAP Star Schema** with strict Row-Level Security (RLS) policies:
 
-```mermaid
-flowchart TD
-    subgraph Sourcing["📡 Multi-Source Ingestion Layer"]
-        A1["ANAPEC Harvester Node"]
-        A2["ReKrute Executive Listings"]
-        A3["Emploi.ma Tech Postings"]
-        A4["DreamJob & Novojob Feeds"]
-        A5["Regional RSS News Stream"]
-    end
+| Table | Description | Primary Key / Foreign Keys | Indexes |
+|---|---|---|---|
+| `public.jobs` | Core processed job postings | `id (UUID)` → `company_id`, `location_id` | `created_at`, `sector`, `contract_type`, `location` |
+| `public.raw_jobs` | Raw scraped payload staging | `id (UUID)` | `scraped_at`, `source_name` |
+| `public.companies` | Normalized employer registry | `id (UUID)` | `name` |
+| `public.locations` | Moroccan city/region geospatial database | `id (UUID)` | `region`, `city_name` |
+| `public.skills` | Relational skill extraction feature store | `id (UUID)` → `job_id` | `normalized_skill`, `category`, `job_id` |
+| `public.pipeline_logs` | Audit logs for n8n scrapers | `id (UUID)` | `executed_at`, `status` |
+| `public.scraper_state` | Pagination & state tracking | `source (TEXT)` | `status` |
+| `public.dead_letter_queue` | Unparseable HTML/API payloads | `id (BIGINT)` | `created_at` |
 
-    subgraph Orchestration["⚡ Workflow Orchestration & Cleaning Engine (n8n)"]
-        B1["Cron Schedule (Every 6 Hours)"] --> B2["DOM Parser & HTML Sanitizer"]
-        B2 --> B3["Deduplication & String Normalizer"]
-    end
+### PL/pgSQL RPC Aggregator (`get_dashboard_kpis`)
 
-    subgraph Intelligence["🧠 Automated NLP & Semantic Parsing Engine"]
-        C1["Intelligence Extraction Service"]
-        C2["Zod Schema Validation Guard"]
-        C3["Skill & Seniority Taxonomy Categorization"]
-        C4["AI Salary & Compensation Agent (LangChain + Gemini)"]
-    end
+```sql
+CREATE OR REPLACE FUNCTION get_dashboard_kpis()
+RETURNS json
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  result json;
+BEGIN
+  SELECT json_build_object(
+    'total_active_jobs', (SELECT COUNT(*) FROM jobs),
+    'new_jobs_today', (SELECT COUNT(*) FROM jobs WHERE created_at >= CURRENT_DATE),
+    'hiring_companies', (SELECT COUNT(DISTINCT company) FROM jobs),
+    'cities_covered', (SELECT COUNT(DISTINCT location) FROM jobs),
+    'avg_salary', (SELECT ROUND(AVG(CAST(regexp_replace(salary, '[^\d.]', '', 'g') AS NUMERIC))) FROM jobs WHERE salary ~ '\d+'),
+    'pipeline_success_rate', (
+      SELECT ROUND(
+        (COUNT(CASE WHEN UPPER(status) = 'SUCCESS' THEN 1 END)::NUMERIC / NULLIF(COUNT(*), 0)::NUMERIC) * 100, 
+        1
+      )
+      FROM pipeline_logs
+    )
+  ) INTO result;
 
-    subgraph Warehouse["🗄️ Supabase PostgreSQL Data Warehouse (OLAP)"]
-        D1[("raw_jobs Audit Table")]
-        D2[("jobs Master Fact Table")]
-        D3[("companies Dimension Table")]
-        D4[("skills Relational Table")]
-        D5[("pipeline_logs Audit Trail")]
-    end
-
-    subgraph Presentation["📊 High-Performance Executive Client (React 19 + Vite)"]
-        E1["Executive Live Analytics Dashboard"]
-        E2["Mobile Responsive Viewport"]
-        E3["Intranet AI Assistant Widget"]
-    end
-
-    Sourcing --> Orchestration
-    B3 --> D1
-    D1 --> Intelligence
-    C1 --> C2 --> C3 & C4
-    C3 & C4 --> D2
-    C3 --> D3 & D4
-    B3 --> D5
-    D2 & D3 & D4 & D5 --> Presentation
-```
-
-### 2. Entity-Relationship & Database Architecture Diagram
-
-```mermaid
-erDiagram
-    JOBS {
-        uuid id PK
-        string title
-        string company
-        string location
-        string sector
-        string industry
-        string salary
-        string experience
-        string contract_type
-        string work_type
-        text description
-        jsonb skills_json
-        timestamptz publication_date
-        timestamptz created_at
-    }
-
-    RAW_JOBS {
-        uuid id PK
-        string raw_title
-        string raw_company
-        string raw_location
-        text raw_html
-        string source_portal
-        timestamptz scraped_at
-    }
-
-    SKILLS {
-        uuid id PK
-        uuid job_id FK
-        string skill_name
-        string normalized_skill
-        string category
-        numeric confidence
-    }
-
-    COMPANIES {
-        uuid id PK
-        string name
-        string category
-        string industry
-        integer open_jobs_count
-        timestamptz last_seen
-    }
-
-    PIPELINE_LOGS {
-        uuid id PK
-        string workflow_name
-        string status
-        integer records_scraped
-        timestamptz executed_at
-    }
-
-    JOBS ||--o{ COMPANIES : "belongs to"
-    JOBS ||--o{ SKILLS : "contains"
-    RAW_JOBS ||--|| JOBS : "normalized into"
-    PIPELINE_LOGS ||--o{ RAW_JOBS : "tracks ingestion"
+  RETURN result;
+END;
+$$;
 ```
 
 ---
 
-## 🔒 Security Boundary & Environment Isolation
+## 🛠️ Automated n8n ETL Pipeline Architecture
 
-MEIP guarantees zero credential exposure in client builds through strict security mechanisms:
+Located in [`n8n-workflows/`](./n8n-workflows/):
 
-1. **Zero Client Secret Exposure**:
-   - Supabase URLs and Anon Keys (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) are dynamically injected via `import.meta.env`.
-   - Zero hardcoded fallback credentials exist in static assets or JavaScript client bundles.
-2. **Backend-for-Frontend (BFF) Key Guard**:
-   - Privileged backend tasks utilize serverless proxy functions (`executeBffProxyRequest`), shielding service role keys from browser inspection.
-3. **Database Row Level Security (RLS)**:
-   - Anonymous HTTP requests are restricted to `SELECT` operations on sanitized master tables (`jobs`, `companies`, `skills`). Data insertion and truncation require verified `service_role` authorization.
-4. **Isolated Configuration State**:
-   - `.gitignore` completely excludes `.env` and `.env.local` files from revision tracking.
+- [`anapec-scraper.json`](./n8n-workflows/anapec-scraper.json): ANAPEC official national vacancy harvester.
+- [`rekrute-scraper.json`](./n8n-workflows/rekrute-scraper.json): Executive & tech job harvester.
+- [`emploi-ma-scraper.json`](./n8n-workflows/emploi-ma-scraper.json): General national portal aggregator.
+- [`nlp-skill-extraction.json`](./n8n-workflows/nlp-skill-extraction.json): Automated regex & NLP skill parsing pipeline.
+- [`ai-salary-estimator.json`](./n8n-workflows/ai-salary-estimator.json): LangChain + Google Gemini AI agent estimating net MAD salary for unlisted postings.
 
 ---
 
-## 🛠️ Interactive Local Setup & CLI Deployment Guide
+## 🛠️ Quick Start & Development Setup
 
 ### Prerequisites
-- **Node.js**: v20.x or v22.x LTS
-- **npm**: v10.x or higher
+- **Node.js**: v18.0 or higher (v20+ recommended)
+- **Package Manager**: `npm` or `bun`
 
-### Step-by-Step CLI Setup
+### Installation & Execution
 
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/zakariabahtani35-prog/morocco-employment-intelligence-platform.git
-   cd morocco-employment-intelligence-platform
-   ```
+```bash
+# 1. Clone the repository
+git clone https://github.com/zakariabahtani35-prog/morocco-employment-intelligence-platform.git
+cd morocco-employment-intelligence-platform
 
-2. **Configure Environment Security File (`.env.local`)**
-   Create a `.env.local` file in the root directory:
-   ```env
-   APP_URL="http://localhost:3000"
-   VITE_CHATBOT_WEBHOOK_URL="https://n8n.intranet.internal/webhook/morocco-labor-ai"
-   VITE_INTRANET_WORKFLOW_URL="https://n8n.intranet.internal/workflow/morocco-labor-market"
-   VITE_SUPABASE_URL="https://your-project.supabase.co"
-   VITE_SUPABASE_ANON_KEY="your_supabase_anon_key_here"
-   ```
+# 2. Install dependencies
+npm install
 
-3. **Install Dependencies**
-   ```bash
-   npm install --legacy-peer-deps
-   ```
+# 3. Start development server
+npm run dev
 
-4. **Verify Type Safety & Unit Tests**
-   ```bash
-   npm run type-check
-   npm run test
-   ```
+# 4. Run automated test suite
+npm run test
 
-5. **Launch Local Development Server**
-   ```bash
-   npm run dev
-   ```
-   Navigate to `http://localhost:3000` in your web browser.
+# 5. Perform TypeScript type check
+npm run type-check
 
-6. **Build & Preview Production Bundle**
-   ```bash
-   npm run build
-   npm run preview
-   ```
-
----
-
-## 📊 System Benchmarks & Maintenance Matrix
-
-### Performance KPI Benchmarks
-
-| Metric / KPI | Measured Benchmark | Benchmark Target | Status |
-| :--- | :--- | :--- | :--- |
-| **OLAP Query Execution Time** | **8ms - 12ms** | < 50ms | 🟢 Optimal |
-| **Vite Production Build Duration** | **9.07s** | < 15.0s | 🟢 Optimal |
-| **TypeScript Type Checking Overhead** | **0 Errors (`tsc --noEmit`)** | 0 Errors | 🟢 Passed |
-| **Unit Test Suite Coverage** | **16/16 Passed (100%)** | 100% Pass | 🟢 Passed |
-| **API Response Latency** | **78ms** | < 150ms | 🟢 Sub-100ms |
-
----
-
-## 🚀 Continuous Integration & Deployment (CI/CD)
-
-Automated **GitHub Actions CI/CD Pipeline** (`.github/workflows/ci.yml`) triggering on pushes to `main` and `master`:
-
-```
-+-------------------------------------------------------------------------------+
-|                            GitHub Actions CI Workflow                          |
-+-------------------------------------------------------------------------------+
-|                                                                               |
-|  [ Checkout Code ] ──> [ Install Deps: npm ci ] ──> [ Type Check: tsc ]      |
-|                                                              |                |
-|  [ Production Dist ] <── [ Vite Build ] <── [ Vitest Unit Tests: vitest run ] |
-|                                                                               |
-+-------------------------------------------------------------------------------+
+# 6. Build production bundle
+npm run build
 ```
 
 ---
 
-## 📄 License & Contact
+## 📜 License & Author
 
-Distributed under the **MIT License**. Engineered for the **Morocco Employment Intelligence Platform (MEIP)** by Zakaria Bahtani.
-
+- **Project**: Morocco Employment Intelligence Platform (MEIP 2026)
+- **Organization**: Simplon Maghreb & CCFBS Presentation Project
+- **License**: [MIT License](./LICENSE)
