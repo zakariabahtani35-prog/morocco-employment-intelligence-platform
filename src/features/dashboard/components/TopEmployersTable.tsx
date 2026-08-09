@@ -42,8 +42,8 @@ export const TopEmployersTable: React.FC<TopEmployersTableProps> = ({
           ))}
         </div>
       ) : filteredCompanies.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto scrollbar-thin">
+          <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
               <tr className="border-b border-[#E2E8F0] dark:border-[#27272A] text-[11px] font-mono-code uppercase text-gray-500 dark:text-zinc-400">
                 <th className="py-3 px-4 font-bold">Company</th>

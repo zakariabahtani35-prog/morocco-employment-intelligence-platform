@@ -25,7 +25,9 @@ import {
   Database,
   Cpu,
   Zap,
-  ShieldCheck
+  ShieldCheck,
+  Menu,
+  X
 } from 'lucide-react';
 
 import '../styles/dashboard.css';
@@ -61,6 +63,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
   // Navigation & Theme
   const [activeSidebarItem, setActiveSidebarItem] = useState('Dashboard');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Drawers State
@@ -301,11 +304,21 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
   return (
     <div className={`min-h-screen flex font-sans-body transition-colors ${isDarkMode ? 'bg-[#09090B] text-zinc-100' : 'bg-[#F4F5F7] text-[#0F172A]'}`}>
       
+      {/* MOBILE BACKDROP OVERLAY */}
+      {isMobileMenuOpen && (
+        <div
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden"
+        />
+      )}
+
       {/* SIDEBAR NAVIGATION */}
       <aside 
-        className={`sticky top-0 h-screen border-r flex flex-col justify-between z-30 transition-all duration-300 shrink-0 ${
+        className={`fixed md:sticky top-0 inset-y-0 left-0 h-screen border-r flex flex-col justify-between z-50 md:z-30 transition-transform duration-300 shrink-0 ${
           isDarkMode ? 'bg-[#121215] border-[#27272A]' : 'bg-white border-[#E2E8F0]'
-        } ${isSidebarCollapsed ? 'w-20' : 'w-64'}`}
+        } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} ${
+          isSidebarCollapsed ? 'w-20' : 'w-64'
+        }`}
       >
         <div>
           <div className="p-5 border-b border-[#E2E8F0] dark:border-[#27272A] flex items-center justify-between">
@@ -325,13 +338,22 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
               )}
             </div>
 
-            <button
-              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#27272A] text-gray-500 dark:text-zinc-400 transition-colors cursor-pointer"
-              title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                className="hidden md:block p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#27272A] text-gray-500 dark:text-zinc-400 transition-colors cursor-pointer"
+                title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="md:hidden p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-[#27272A] text-gray-500 dark:text-zinc-400 transition-colors cursor-pointer"
+                title="Close Drawer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           <nav className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-140px)]">
@@ -344,6 +366,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
                   key={item.label}
                   onClick={() => {
                     setActiveSidebarItem(item.label);
+                    setIsMobileMenuOpen(false);
                     if (item.label === 'Dashboard') {
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                       return;
@@ -394,10 +417,18 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
       <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
         
         {/* TOP NAVBAR */}
-        <header className={`sticky top-0 z-20 border-b px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 transition-colors ${
+        <header className={`sticky top-0 z-20 border-b px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3 transition-colors ${
           isDarkMode ? 'bg-[#121215]/95 border-[#27272A] backdrop-blur-md' : 'bg-white/95 border-[#E2E8F0] backdrop-blur-md shadow-2xs'
         }`}>
-          <div className="flex items-center gap-3 flex-1 max-w-md min-w-[240px]">
+          <div className="flex items-center gap-2.5 flex-1 max-w-md min-w-0">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl border border-[#E2E8F0] dark:border-[#27272A] hover:bg-gray-100 dark:hover:bg-[#27272A] text-gray-600 dark:text-zinc-300 transition-colors cursor-pointer shrink-0"
+              title="Toggle Mobile Navigation Drawer"
+              aria-label="Toggle Mobile Navigation Drawer"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
             <div className="relative w-full">
               <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500" />
               <input
