@@ -17,7 +17,14 @@
     "jsx": "react-jsx",
     "paths": {
       "@/*": [
+        "./src/*",
         "./*"
+      ],
+      "next/image": [
+        "./src/lib/next-image.tsx"
+      ],
+      "next/link": [
+        "./src/lib/next-link.tsx"
       ]
     },
     "allowImportingTsExtensions": true,

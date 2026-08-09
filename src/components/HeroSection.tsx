@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, LayoutDashboard, Database, Github, GraduationCap, MapPin, Cpu } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import RotatingText from './RotatingText';
 import { SimplonLogo } from './SimplonLogo';
 

@@ -11,7 +11,10 @@ export default defineConfig(() => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(__dirname, './src'),
+        'components': path.resolve(__dirname, './src/components'),
+        'next/image': path.resolve(__dirname, './src/lib/next-image.tsx'),
+        'next/link': path.resolve(__dirname, './src/lib/next-link.tsx'),
       },
     },
     server: {
@@ -33,7 +36,7 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks: {
-            'vendor-motion': ['motion'],
+            'vendor-motion': ['framer-motion'],
             'vendor-charts': ['recharts'],
             'vendor-icons': ['lucide-react'],
             'vendor-supabase': ['@supabase/supabase-js'],

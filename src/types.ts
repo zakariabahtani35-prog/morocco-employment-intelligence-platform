@@ -42,4 +42,7 @@ export interface Testimonial {
   role: string;
   company: string;
   avatarUrl?: string;
+  githubUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
 }

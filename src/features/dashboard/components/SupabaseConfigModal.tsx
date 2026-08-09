@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Database, ShieldCheck, Link, Key, Check, Copy, X } from 'lucide-react';
 import { DashboardLiveData } from '../../../lib/supabaseService';
 

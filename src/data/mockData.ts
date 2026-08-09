@@ -159,7 +159,11 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
     author: 'Karim El Amrani',
     handle: '@kelamrani_tech',
     role: 'Lead Data Architect',
-    company: 'Simplon Morocco'
+    company: 'Simplon Morocco',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop',
+    githubUrl: 'https://github.com',
+    twitterUrl: 'https://twitter.com',
+    linkedinUrl: 'https://linkedin.com'
   },
   {
     id: 'test-2',
@@ -167,7 +171,11 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
     author: 'Sarah Bennani',
     handle: '@sarahb_data',
     role: 'Senior Analytics Director',
-    company: 'Capgemini Tech Hub'
+    company: 'Capgemini Tech Hub',
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop',
+    githubUrl: 'https://github.com',
+    twitterUrl: 'https://twitter.com',
+    linkedinUrl: 'https://linkedin.com'
   },
   {
     id: 'test-3',
@@ -175,6 +183,10 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
     author: 'Youssef Mansouri',
     handle: '@ymansouri_hr',
     role: 'Head of Talent Acquisition',
-    company: 'Attijariwafa Bank'
+    company: 'Attijariwafa Bank',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop',
+    githubUrl: 'https://github.com',
+    twitterUrl: 'https://twitter.com',
+    linkedinUrl: 'https://linkedin.com'
   }
 ];

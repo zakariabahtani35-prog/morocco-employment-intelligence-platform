@@ -43,6 +43,7 @@ import { DashboardFiltersToolbar } from './DashboardFiltersToolbar';
 // New Enterprise Intelligence Modules
 import { MoroccoEmploymentHeatMap } from './MoroccoEmploymentHeatMap';
 import { SkillsIntelligenceDashboard } from './SkillsIntelligenceDashboard';
+import { PredictiveAnalyticsSection } from './PredictiveAnalyticsSection';
 import { CompanyProfileDrawer } from './CompanyProfileDrawer';
 import { JobDetailsDrawer } from './JobDetailsDrawer';
 import { CompanyListingItem, JobRecordItem } from '../../../lib/supabaseService';
@@ -343,8 +344,15 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
                   key={item.label}
                   onClick={() => {
                     setActiveSidebarItem(item.label);
-                    const sectionId = item.label.toLowerCase().replace(/\s+/g, '-');
-                    const targetEl = document.getElementById(sectionId);
+                    if (item.label === 'Dashboard') {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      return;
+                    }
+                    const customIdMap: Record<string, string> = {
+                      'Predictive AI': 'predictive-analytics',
+                    };
+                    const targetId = customIdMap[item.label] || item.label.toLowerCase().replace(/\s+/g, '-');
+                    const targetEl = document.getElementById(targetId);
                     if (targetEl) {
                       targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
@@ -492,6 +500,13 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onNaviga
             skillsCategoryDistribution={liveData?.skillsCategoryDistribution}
           />
 
+          {/* SECTION 4: PREDICTIVE AI LABOR MARKET FORECAST */}
+          <PredictiveAnalyticsSection
+            isLoading={isLoadingSupabase}
+            isDarkMode={isDarkMode}
+            predictiveForecasts={liveData?.predictiveForecasts}
+            totalActiveJobs={liveData?.totalActiveJobs}
+          />
 
           {/* SECTION 5: DYNAMIC RECRUITMENT TRENDS */}
           <RecruitmentTrendsChart

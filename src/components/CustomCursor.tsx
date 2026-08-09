@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useSpring } from 'motion/react';
+import { motion, useSpring } from 'framer-motion';
 
 export const CustomCursor: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
